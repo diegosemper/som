@@ -85,33 +85,51 @@ waarde.
 
 ## `npm run controleer`
 
-Twee stappen, allebei met de échte motor:
+Drie stappen, allemaal met de échte motor:
 
 1. **Tweehonderd sommen per onderwerp.** Wordt het eigen antwoord goedgekeurd,
    worden alle valkuilen afgekeurd, eindigt de uitwerking op het antwoord, en
    wordt het overtikken van de vraag niet geaccepteerd.
-2. **De syllabus zelf.** `src/stof/reader.ts` bevat de opgaven uit de reader met
+2. **De syllabus zelf.** `src/stof/reader.ts` bevat 152 opgaven uit de reader met
    de officiële antwoorden van blz. 67–70. Is de rekenaar het daar niet mee
    eens, dan breekt de bouw.
+3. **Rooktest en rendertest.** Van elk onderwerp wordt een hele ronde uitgespeeld,
+   en het pad wordt met `react-dom/server` getekend — zodat een lege pagina de
+   bouw breekt en niet pas op de toetsdag opvalt.
 
-Die tweede stap heeft tijdens het bouwen meteen een echte fout gevangen:
-`6x² ÷ 3x` werd als `(6x²/3)·x` gelezen in plaats van `6x²/(3x)`.
+Stap 2 ving tijdens het bouwen twee echte fouten:
 
-`npm run rooktest` speelt daarnaast van elk onderwerp een hele ronde uit.
+- `6x² ÷ 3x` werd als `(6x²/3)·x` gelezen in plaats van `6x²/(3x)`;
+- `2/3 ÷ 1/2` kwam uit op `1/3`, omdat `÷` en `/` even sterk waren. Het deelteken
+  scheidt hele breuken en bindt dus losser dan de breukstreep, terwijl het even
+  sterk blijft als het maalteken. Nu klopt `24 ÷ 3 · 2 = 16` én `2/3 ÷ 1/2 = 4/3`.
+
+---
+
+## Proeftoets
+
+Twintig sommen in de verdeling van de echte toets, zonder hartjes. Achteraf
+krijg je elke fout terug mét de uitwerking. Onderwerpen waar je eerder op
+struikelde krijgen een extra lot — die komen ook tussen gewone rondes door
+terug (`src/engine/toets.ts` en de foutenbak in `src/opslag/voortgang.ts`).
 
 ---
 
 ## Online zetten
 
-Pushen naar `main` is genoeg; `.github/workflows/deploy.yml` bouwt en publiceert.
+Pushen naar `main` is genoeg; `.github/workflows/deploy.yml` bouwt en publiceert
+naar **https://diegosemper.github.io/som/**. Een service worker maakt de app
+offline bruikbaar; "Zet op beginscherm" geeft een echt app-icoon.
 
 ---
 
-## Wat er nog bij komt
+## Een onderwerp toevoegen of aanpassen
 
-De codes staan al in de padvolgorde in `src/stof/index.ts`; wat er nog niet is
-wordt overgeslagen. Een onderwerp toevoegen is dus: bestand in `src/stof/codes/`,
+De codes staan in padvolgorde in `src/stof/index.ts`; wat er niet is wordt
+overgeslagen. Een onderwerp toevoegen is dus: bestand in `src/stof/codes/`,
 importeren in `index.ts`, in `AANWEZIG` zetten.
 
-Nog te doen: hoofdstuk 3 (kansen), 5 en 6 (breuken), 7 (lijnen) en 8
-(hogeregraadsfuncties), plus de proeftoets.
+Alle 35 codes van de oefentool zitten erin. De letter-per-onderwerp verdeling is
+afgeleid uit de volgorde waarin de stof in de reader staat; klopt een code niet
+met wat er in Brightspace staat, dan is dat één regel verzetten — de codes zijn
+alleen labels boven de generators.
