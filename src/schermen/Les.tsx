@@ -143,7 +143,7 @@ export default function Les({ onderwerp, opStart, opTerug }: Props) {
 
       {magVerder && (
         <button className={'groot' + (laatste ? ' groen' : '')} onClick={verder}>
-          {laatste ? 'Nu jij — 8 sommen' : 'Verder'}
+          {laatste ? 'Nu jij — 12 sommen' : 'Verder'}
         </button>
       )}
     </div>

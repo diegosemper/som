@@ -18,9 +18,9 @@ export default function Slot({ onderwerp, gewonnen, fouten, sterren, opNogEen, o
         <p>
           {gewonnen
             ? fouten === 0
-              ? `${onderwerp.titel} zit erin. Doe hem nog eens foutloos voor de derde ster.`
+              ? `${onderwerp.titel} zit erin — twaalf op twaalf. Doe hem nog eens foutloos voor de derde ster.`
               : `${fouten === 1 ? 'Eén fout' : `${fouten} fouten`} onderweg. Foutloos geeft twee sterren.`
-            : `Deze ging niet. Lees de uitleg nog eens door en probeer opnieuw — je verliest niets.`}
+            : `Deze ging niet. Loop het lesje nog eens door en probeer opnieuw — je verliest niets.`}
         </p>
 
         {gewonnen && (

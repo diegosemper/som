@@ -6,7 +6,16 @@
  */
 
 import { ONDERWERPEN } from '../src/stof/index.ts'
-import { afloop, goed, huidige, mis, startRonde } from '../src/engine/ronde.ts'
+import {
+  afloop,
+  goed,
+  huidige,
+  LEVENS,
+  MEERKEUZE,
+  mis,
+  RONDE_LENGTE,
+  startRonde,
+} from '../src/engine/ronde.ts'
 import { kijkNa } from '../src/engine/antwoord.ts'
 import { maakToets, TOETS_LENGTE } from '../src/engine/toets.ts'
 import { bouwLes } from '../src/engine/les.ts'
@@ -74,6 +83,44 @@ for (const zaad of [1, 2, 3]) {
 }
 
 for (const onderwerp of ONDERWERPEN) {
+  // 0. De opbouw: twaalf sommen, eerst vier om uit te kiezen, dan intikken.
+  for (const zaad of [3, 42, 777]) {
+    const opzet = startRonde(onderwerp, zaad)
+    if (opzet.wachtrij.length !== RONDE_LENGTE) {
+      klachten.push(`${onderwerp.code}: ronde van ${opzet.wachtrij.length} in plaats van ${RONDE_LENGTE}`)
+    }
+    opzet.wachtrij.slice(0, MEERKEUZE).forEach((opgave, i) => {
+      if (opgave.invoer !== 'keuze') {
+        klachten.push(`${onderwerp.code} (zaad ${zaad}): som ${i + 1} is geen meerkeuze`)
+        return
+      }
+      const keuzes = opgave.keuzes ?? []
+      if (keuzes.length < 2) {
+        klachten.push(`${onderwerp.code} (zaad ${zaad}): meerkeuze met ${keuzes.length} opties`)
+      }
+      if (!keuzes.includes(opgave.antwoord)) {
+        klachten.push(`${onderwerp.code} (zaad ${zaad}): het goede antwoord staat niet tussen de keuzes`)
+      }
+      if (new Set(keuzes).size !== keuzes.length) {
+        klachten.push(`${onderwerp.code} (zaad ${zaad}): meerkeuze met dubbele opties`)
+      }
+      for (const keuze of keuzes) {
+        if (keuze !== opgave.antwoord && kijkNa(keuze, opgave).goed) {
+          klachten.push(`${onderwerp.code} (zaad ${zaad}): "${keuze}" telt óók als goed`)
+        }
+      }
+    })
+    // Het intikgedeelte blijft intikken -- behalve bij onderwerpen die van
+    // zichzelf al meerkeuze zijn (de ongelijkheden van 6c).
+    if (onderwerp.code !== '6c') {
+      opzet.wachtrij.slice(MEERKEUZE).forEach((opgave, i) => {
+        if (opgave.invoer !== 'typen') {
+          klachten.push(`${onderwerp.code} (zaad ${zaad}): som ${MEERKEUZE + i + 1} is geen intikvraag`)
+        }
+      })
+    }
+  }
+
   // 1. Alles goed beantwoorden: ronde gewonnen, nul fouten.
   let stand = startRonde(onderwerp, 42)
   let ronden = 0
@@ -89,8 +136,10 @@ for (const onderwerp of ONDERWERPEN) {
     klachten.push(`${onderwerp.code}: ronde speelt niet uit`)
   }
 
-  // 2. Drie keer missen: hartjes op.
-  if (afloop(mis(mis(mis(startRonde(onderwerp, 7))))) !== 'verloren') {
+  // 2. Zo vaak missen als er hartjes zijn: dan is de ronde voorbij.
+  let opgebruikt = startRonde(onderwerp, 7)
+  for (let i = 0; i < LEVENS; i++) opgebruikt = mis(opgebruikt)
+  if (afloop(opgebruikt) !== 'verloren') {
     klachten.push(`${onderwerp.code}: de levens lopen niet af`)
   }
 

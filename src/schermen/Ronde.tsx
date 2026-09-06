@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { Onderwerp } from '../stof/types.ts'
-import { afloop, goed, huidige, mis, startRonde, type Rondestand } from '../engine/ronde.ts'
+import { afloop, goed, huidige, LEVENS, mis, startRonde, type Rondestand } from '../engine/ronde.ts'
 import { kijkNa, type Oordeel } from '../engine/antwoord.ts'
 import { receptVoor } from '../stof/gasten.ts'
 import { juich, troost } from '../ui/praat.ts'
@@ -92,13 +92,18 @@ export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser
         </div>
         <span className="hartjes">
           {'♥'.repeat(Math.max(0, stand.levens))}
-          <span style={{ color: '#39415a' }}>{'♥'.repeat(Math.max(0, 3 - stand.levens))}</span>
+          <span style={{ color: '#39415a' }}>
+            {'♥'.repeat(Math.max(0, LEVENS - stand.levens))}
+          </span>
         </span>
       </div>
 
       <div className="vraagvak">
         <div className="opdracht">
-          {opgave.code !== onderwerp.code && <span className="codetag herhaal">herhaling {opgave.code}</span>}{' '}
+          {opgave.invoer === 'keuze' && <span className="codetag kies">kies er één</span>}{' '}
+          {opgave.code !== onderwerp.code && (
+            <span className="codetag herhaal">herhaling {opgave.code}</span>
+          )}{' '}
           {opgave.opdracht}
         </div>
         <div
