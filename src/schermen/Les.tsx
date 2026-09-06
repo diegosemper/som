@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
-import type { Onderwerp } from '../stof/types.ts'
+import type { Onderwerp, Rondesoort } from '../stof/types.ts'
 import { bouwLes, type Optie } from '../engine/les.ts'
+import { RONDE_LENGTE } from '../engine/ronde.ts'
 import { gastVoor } from '../stof/gasten.ts'
 
 type Props = {
   onderwerp: Onderwerp
-  opStart: () => void
+  opStart: (soort: Rondesoort) => void
   opTerug: () => void
 }
 
@@ -23,10 +24,6 @@ export default function Les({ onderwerp, opStart, opTerug }: Props) {
   const laatste = nummer === beurten.length - 1
 
   function verder() {
-    if (laatste) {
-      opStart()
-      return
-    }
     setNummer(nummer + 1)
     setStappenOpen(1)
     setGekozen(null)
@@ -141,10 +138,21 @@ export default function Les({ onderwerp, opStart, opTerug }: Props) {
         )}
       </div>
 
-      {magVerder && (
-        <button className={'groot' + (laatste ? ' groen' : '')} onClick={verder}>
-          {laatste ? 'Nu jij — 12 sommen' : 'Verder'}
+      {magVerder && !laatste && (
+        <button className="groot" onClick={verder}>
+          Verder
         </button>
+      )}
+
+      {magVerder && laatste && (
+        <>
+          <button className="groot groen" onClick={() => opStart('meerkeuze')}>
+            🔘 Meerkeuze — {RONDE_LENGTE} vragen
+          </button>
+          <button className="groot rustig" onClick={() => opStart('open')}>
+            ⌨️ Zelf invullen — {RONDE_LENGTE} vragen
+          </button>
+        </>
       )}
     </div>
   )

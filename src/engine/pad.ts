@@ -7,7 +7,7 @@
  */
 
 import type { Onderwerp } from '../stof/types.ts'
-import type { Voortgang } from '../opslag/voortgang.ts'
+import { sterrenVoor, type Voortgang } from '../opslag/voortgang.ts'
 
 export function isOpen(_onderwerpen: Onderwerp[], _code: string, _v: Voortgang): boolean {
   return true
@@ -16,13 +16,13 @@ export function isOpen(_onderwerpen: Onderwerp[], _code: string, _v: Voortgang):
 /** Het eerste onderwerp dat nog geen drie sterren heeft: daar ga je verder. */
 export function volgendeStap(onderwerpen: Onderwerp[], v: Voortgang): Onderwerp | undefined {
   for (const o of onderwerpen) {
-    if ((v.sterren[o.code] ?? 0) < 3) return o
+    if (sterrenVoor(v, o.code) < 3) return o
   }
   return undefined
 }
 
 export function totaalSterren(onderwerpen: Onderwerp[], v: Voortgang): { gehaald: number; mogelijk: number } {
   let gehaald = 0
-  for (const o of onderwerpen) gehaald += v.sterren[o.code] ?? 0
+  for (const o of onderwerpen) gehaald += sterrenVoor(v, o.code)
   return { gehaald, mogelijk: onderwerpen.length * 3 }
 }

@@ -5,18 +5,16 @@
  * Je krijgt hem dus nog een keer, meteen nadat je de uitwerking gelezen hebt.
  */
 
-import type { Onderwerp, Opgave } from '../stof/types.ts'
+import type { Onderwerp, Opgave, Rondesoort } from '../stof/types.ts'
 import { maakRng } from '../stof/rng.ts'
 import { alsMeerkeuze } from './meerkeuze.ts'
 
-/** Eerst kiezen uit knoppen, dan pas zelf intikken. */
-export const MEERKEUZE = 4
-export const ZELF = 8
-export const RONDE_LENGTE = MEERKEUZE + ZELF
-export const LEVENS = 4
+export const RONDE_LENGTE = 5
+export const LEVENS = 3
 
 export type Rondestand = {
   code: string
+  soort: Rondesoort
   wachtrij: Opgave[]
   klaar: number
   totaal: number
@@ -29,16 +27,18 @@ export type Rondestand = {
 export type Afloop = 'bezig' | 'gewonnen' | 'verloren'
 
 /**
- * Twaalf sommen: eerst vier meerkeuze om erin te komen, daarna acht die je zelf
- * intikt. Zo zie je bij de eerste vier meteen hoe een goed antwoord eruitziet --
- * en welke fouten er op de loer liggen, want de knoppen zijn de valkuilen.
+ * Vijf sommen, allemaal in dezelfde vorm.
  *
- * `herhaling` zijn onderwerpen uit de foutenbak: daar komt er één van tussen,
- * halverwege de ronde. Zo blijf je herhalen wat je niet kunt in plaats van wat
- * je al kunt.
+ * Bij `meerkeuze` kies je uit knoppen waarvan de foute opties de valkuilen van
+ * de opgavemaker zijn; bij `open` tik je alles zelf in. Welke vorm helpt
+ * verschilt per onderwerp, dus dat kiest de speler zelf.
+ *
+ * `herhaling` zijn onderwerpen uit de foutenbak: daar komt er één van tussen.
+ * Zo blijf je herhalen wat je niet kunt in plaats van wat je al kunt.
  */
 export function startRonde(
   onderwerp: Onderwerp,
+  soort: Rondesoort,
   zaad: number = Date.now(),
   herhaling: Onderwerp[] = [],
 ): Rondestand {
@@ -55,26 +55,28 @@ export function startRonde(
     wachtrij.push(opgave)
   }
 
-  // Herhaling uit de foutenbak komt in het intikgedeelte, niet tussen de
-  // meerkeuzevragen: die vier gaan over dít onderwerp.
-  const plekken = [MEERKEUZE + 2, MEERKEUZE + 5]
-  herhaling.slice(0, plekken.length).forEach((ander, i) => {
-    wachtrij[plekken[i]] = ander.maak(rng)
-  })
+  // Nooit als eerste of laatste vraag: je begint en eindigt met dit onderwerp.
+  const herhaalplek = 3
+  if (herhaling.length > 0 && wachtrij.length > herhaalplek) {
+    wachtrij[herhaalplek] = herhaling[0].maak(rng)
+  }
 
-  // De eerste vier worden meerkeuze. Als tegenspelers gebruiken we de valkuilen
-  // van de opgave zelf, aangevuld met antwoorden van de andere sommen.
-  const reserve = wachtrij.map((o) => o.antwoord)
-  for (let i = 0; i < MEERKEUZE && i < wachtrij.length; i++) {
-    wachtrij[i] = alsMeerkeuze(
-      wachtrij[i],
-      rng,
-      rng.schud(reserve.filter((_, k) => k !== i)),
-    )
+  if (soort === 'meerkeuze') {
+    // Als tegenspelers gebruiken we de valkuilen van de opgave zelf, aangevuld
+    // met de antwoorden van de andere sommen uit deze ronde.
+    const reserve = wachtrij.map((o) => o.antwoord)
+    for (let i = 0; i < wachtrij.length; i++) {
+      wachtrij[i] = alsMeerkeuze(
+        wachtrij[i],
+        rng,
+        rng.schud(reserve.filter((_, k) => k !== i)),
+      )
+    }
   }
 
   return {
     code: onderwerp.code,
+    soort,
     wachtrij,
     klaar: 0,
     totaal: RONDE_LENGTE,

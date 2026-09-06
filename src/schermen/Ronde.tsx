@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { Onderwerp } from '../stof/types.ts'
+import type { Onderwerp, Rondesoort } from '../stof/types.ts'
 import { afloop, goed, huidige, LEVENS, mis, startRonde, type Rondestand } from '../engine/ronde.ts'
 import { kijkNa, type Oordeel } from '../engine/antwoord.ts'
 import { receptVoor } from '../stof/gasten.ts'
@@ -9,6 +9,7 @@ import { nodigeLetters } from '../ui/toetsen.ts'
 
 type Props = {
   onderwerp: Onderwerp
+  soort: Rondesoort
   /** Onderwerpen uit de foutenbak die tussendoor terugkomen. */
   herhaling: Onderwerp[]
   opTerug: () => void
@@ -16,8 +17,10 @@ type Props = {
   opMisser: (code: string) => void
 }
 
-export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser }: Props) {
-  const [stand, setStand] = useState<Rondestand>(() => startRonde(onderwerp, Date.now(), herhaling))
+export default function Ronde({ onderwerp, soort, herhaling, opTerug, opKlaar, opMisser }: Props) {
+  const [stand, setStand] = useState<Rondestand>(() =>
+    startRonde(onderwerp, soort, Date.now(), herhaling),
+  )
   const [invoer, setInvoer] = useState('')
   const [melding, setMelding] = useState<string | null>(null)
   const [oordeel, setOordeel] = useState<Oordeel | null>(null)

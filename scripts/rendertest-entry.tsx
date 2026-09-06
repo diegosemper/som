@@ -3,18 +3,34 @@
 import { renderToString } from 'react-dom/server'
 import App from '../src/App.tsx'
 import Les from '../src/schermen/Les.tsx'
+import Onderwerpscherm from '../src/schermen/Onderwerp.tsx'
 import { ONDERWERPEN } from '../src/stof/index.ts'
+import { lees } from '../src/opslag/voortgang.ts'
 
 const html = renderToString(<App />)
 
-// Het lesje van elk onderwerp moet ook tekenen — daar zit de meeste nieuwe code.
+// Het lesje en het keuzescherm van elk onderwerp moeten ook tekenen.
 const lesFouten: string[] = []
+const voortgang = lees()
 for (const onderwerp of ONDERWERPEN) {
   try {
     const les = renderToString(
       <Les onderwerp={onderwerp} opStart={() => {}} opTerug={() => {}} />,
     )
     if (les.length < 200) lesFouten.push(`${onderwerp.code}: lesje tekent bijna niets`)
+
+    const keuze = renderToString(
+      <Onderwerpscherm
+        onderwerp={onderwerp}
+        voortgang={voortgang}
+        opLes={() => {}}
+        opRonde={() => {}}
+        opTerug={() => {}}
+      />,
+    )
+    if (!keuze.includes('Meerkeuze') || !keuze.includes('Zelf invullen')) {
+      lesFouten.push(`${onderwerp.code}: keuzescherm mist een van de twee vormen`)
+    }
   } catch (fout) {
     lesFouten.push(`${onderwerp.code}: ${(fout as Error).message}`)
   }

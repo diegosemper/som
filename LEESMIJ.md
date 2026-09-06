@@ -1,8 +1,12 @@
 # SOM
 
 Oefenspel voor **Startvaardigheden Wiskunde HBO-ICT** (Hanze, versie 2026-27).
-Korte rondes van acht sommen, drie hartjes, en bij een fout de hele uitwerking
+Korte rondes van vijf sommen, drie hartjes, en bij een fout de hele uitwerking
 van precies die som — met de naam van de fout die je maakte.
+
+Elk onderwerp heeft twee rondes met eigen sterren: **meerkeuze** (de foute
+knoppen zijn de valkuilen van de opgavemaker) en **zelf invullen**. Welke vorm
+helpt verschilt per onderwerp, dus dat kiest de speler zelf.
 
 Mobiel-eerst: bedoeld om op je telefoon te spelen, met een eigen
 wiskunde-toetsenbord zodat je nooit naar `^`, `√` of `·` hoeft te zoeken.

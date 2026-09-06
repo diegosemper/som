@@ -6,16 +6,7 @@
  */
 
 import { ONDERWERPEN } from '../src/stof/index.ts'
-import {
-  afloop,
-  goed,
-  huidige,
-  LEVENS,
-  MEERKEUZE,
-  mis,
-  RONDE_LENGTE,
-  startRonde,
-} from '../src/engine/ronde.ts'
+import { afloop, goed, huidige, LEVENS, mis, RONDE_LENGTE, startRonde } from '../src/engine/ronde.ts'
 import { kijkNa } from '../src/engine/antwoord.ts'
 import { maakToets, TOETS_LENGTE } from '../src/engine/toets.ts'
 import { bouwLes } from '../src/engine/les.ts'
@@ -83,70 +74,71 @@ for (const zaad of [1, 2, 3]) {
 }
 
 for (const onderwerp of ONDERWERPEN) {
-  // 0. De opbouw: twaalf sommen, eerst vier om uit te kiezen, dan intikken.
-  for (const zaad of [3, 42, 777]) {
-    const opzet = startRonde(onderwerp, zaad)
-    if (opzet.wachtrij.length !== RONDE_LENGTE) {
-      klachten.push(`${onderwerp.code}: ronde van ${opzet.wachtrij.length} in plaats van ${RONDE_LENGTE}`)
-    }
-    opzet.wachtrij.slice(0, MEERKEUZE).forEach((opgave, i) => {
-      if (opgave.invoer !== 'keuze') {
-        klachten.push(`${onderwerp.code} (zaad ${zaad}): som ${i + 1} is geen meerkeuze`)
-        return
+  for (const soort of ['meerkeuze', 'open']) {
+    const waar = `${onderwerp.code}/${soort}`
+
+    // 0. De opbouw: vijf sommen, allemaal in de gekozen vorm.
+    for (const zaad of [3, 42, 777]) {
+      const opzet = startRonde(onderwerp, soort, zaad)
+      if (opzet.wachtrij.length !== RONDE_LENGTE) {
+        klachten.push(`${waar}: ronde van ${opzet.wachtrij.length} in plaats van ${RONDE_LENGTE}`)
       }
-      const keuzes = opgave.keuzes ?? []
-      if (keuzes.length < 2) {
-        klachten.push(`${onderwerp.code} (zaad ${zaad}): meerkeuze met ${keuzes.length} opties`)
-      }
-      if (!keuzes.includes(opgave.antwoord)) {
-        klachten.push(`${onderwerp.code} (zaad ${zaad}): het goede antwoord staat niet tussen de keuzes`)
-      }
-      if (new Set(keuzes).size !== keuzes.length) {
-        klachten.push(`${onderwerp.code} (zaad ${zaad}): meerkeuze met dubbele opties`)
-      }
-      for (const keuze of keuzes) {
-        if (keuze !== opgave.antwoord && kijkNa(keuze, opgave).goed) {
-          klachten.push(`${onderwerp.code} (zaad ${zaad}): "${keuze}" telt óók als goed`)
-        }
-      }
-    })
-    // Het intikgedeelte blijft intikken -- behalve bij onderwerpen die van
-    // zichzelf al meerkeuze zijn (de ongelijkheden van 6c).
-    if (onderwerp.code !== '6c') {
-      opzet.wachtrij.slice(MEERKEUZE).forEach((opgave, i) => {
-        if (opgave.invoer !== 'typen') {
-          klachten.push(`${onderwerp.code} (zaad ${zaad}): som ${MEERKEUZE + i + 1} is geen intikvraag`)
+
+      opzet.wachtrij.forEach((opgave, i) => {
+        if (soort === 'meerkeuze') {
+          if (opgave.invoer !== 'keuze') {
+            klachten.push(`${waar} (zaad ${zaad}): som ${i + 1} is geen meerkeuze`)
+            return
+          }
+          const keuzes = opgave.keuzes ?? []
+          if (keuzes.length < 2) {
+            klachten.push(`${waar} (zaad ${zaad}): meerkeuze met ${keuzes.length} opties`)
+          }
+          if (!keuzes.includes(opgave.antwoord)) {
+            klachten.push(`${waar} (zaad ${zaad}): het goede antwoord staat niet tussen de keuzes`)
+          }
+          if (new Set(keuzes).size !== keuzes.length) {
+            klachten.push(`${waar} (zaad ${zaad}): meerkeuze met dubbele opties`)
+          }
+          for (const keuze of keuzes) {
+            if (keuze !== opgave.antwoord && kijkNa(keuze, opgave).goed) {
+              klachten.push(`${waar} (zaad ${zaad}): "${keuze}" telt óók als goed`)
+            }
+          }
+        } else if (onderwerp.code !== '6c' && opgave.invoer !== 'typen') {
+          // 6c (ongelijkheden) is van zichzelf al meerkeuze.
+          klachten.push(`${waar} (zaad ${zaad}): som ${i + 1} is geen intikvraag`)
         }
       })
     }
-  }
 
-  // 1. Alles goed beantwoorden: ronde gewonnen, nul fouten.
-  let stand = startRonde(onderwerp, 42)
-  let ronden = 0
-  while (afloop(stand) === 'bezig' && ronden++ < 60) {
-    const opgave = huidige(stand)
-    if (!kijkNa(opgave.antwoord, opgave).goed) {
-      klachten.push(`${onderwerp.code}: eigen antwoord "${opgave.antwoord}" wordt afgekeurd`)
-      break
+    // 1. Alles goed beantwoorden: ronde gewonnen, nul fouten.
+    let stand = startRonde(onderwerp, soort, 42)
+    let ronden = 0
+    while (afloop(stand) === 'bezig' && ronden++ < 60) {
+      const opgave = huidige(stand)
+      if (!kijkNa(opgave.antwoord, opgave).goed) {
+        klachten.push(`${waar}: eigen antwoord "${opgave.antwoord}" wordt afgekeurd`)
+        break
+      }
+      stand = goed(stand)
     }
-    stand = goed(stand)
-  }
-  if (afloop(stand) !== 'gewonnen' || stand.fouten !== 0) {
-    klachten.push(`${onderwerp.code}: ronde speelt niet uit`)
-  }
+    if (afloop(stand) !== 'gewonnen' || stand.fouten !== 0) {
+      klachten.push(`${waar}: ronde speelt niet uit`)
+    }
 
-  // 2. Zo vaak missen als er hartjes zijn: dan is de ronde voorbij.
-  let opgebruikt = startRonde(onderwerp, 7)
-  for (let i = 0; i < LEVENS; i++) opgebruikt = mis(opgebruikt)
-  if (afloop(opgebruikt) !== 'verloren') {
-    klachten.push(`${onderwerp.code}: de levens lopen niet af`)
-  }
+    // 2. Zo vaak missen als er hartjes zijn: dan is de ronde voorbij.
+    let opgebruikt = startRonde(onderwerp, soort, 7)
+    for (let i = 0; i < LEVENS; i++) opgebruikt = mis(opgebruikt)
+    if (afloop(opgebruikt) !== 'verloren') {
+      klachten.push(`${waar}: de levens lopen niet af`)
+    }
 
-  // 3. Onzin wordt afgekeurd.
-  const proef = huidige(startRonde(onderwerp, 99))
-  if (kijkNa('999999', proef).goed) {
-    klachten.push(`${onderwerp.code}: onzin-antwoord wordt goedgekeurd`)
+    // 3. Onzin wordt afgekeurd.
+    const proef = huidige(startRonde(onderwerp, soort, 99))
+    if (kijkNa('999999', proef).goed) {
+      klachten.push(`${waar}: onzin-antwoord wordt goedgekeurd`)
+    }
   }
 }
 
@@ -157,4 +149,6 @@ if (klachten.length > 0) {
   process.exit(1)
 }
 
-console.log(`Rooktest in orde: ${ONDERWERPEN.length} rondes uitgespeeld.`)
+console.log(
+  `Rooktest in orde: ${ONDERWERPEN.length * 2} rondes uitgespeeld (meerkeuze en open per onderwerp).`,
+)

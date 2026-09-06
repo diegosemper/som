@@ -178,6 +178,67 @@ button {
   color: #3a4256;
 }
 
+/* ---------------- onderwerpscherm ---------------- */
+
+.onderwerpkop {
+  padding: 6px 0 14px;
+}
+
+.onderwerpkop .gastemoji {
+  font-size: 40px;
+}
+
+.onderwerpkop h2 {
+  margin: 6px 0 2px;
+  font-size: 27px;
+}
+
+.onderwerpkop p {
+  margin: 0;
+  color: var(--zacht);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.keuzekaart {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  background: var(--kaart);
+  border: 1px solid var(--kaart-rand);
+  border-radius: var(--rand);
+  padding: 16px 14px;
+  margin-bottom: 10px;
+}
+
+.keuzekaart:active {
+  border-color: var(--accent);
+  transform: scale(0.985);
+}
+
+.keuzeicoon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.keuzetekst {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.keuzetekst b {
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.keuzetekst span {
+  color: var(--zacht);
+  font-size: 13px;
+}
+
 /* ---------------- uitleg ---------------- */
 
 .uitlegkaart {

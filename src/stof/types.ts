@@ -20,6 +20,13 @@ export type Valkuil = {
   heet: string
 }
 
+/**
+ * De twee manieren waarop je een onderwerp kunt oefenen. Welke beter werkt
+ * verschilt per onderwerp én per persoon: bij gemiddelden is kiezen prima, bij
+ * herleiden wil je het zelf opschrijven.
+ */
+export type Rondesoort = 'meerkeuze' | 'open'
+
 /** Hoe het antwoord nagekeken wordt. */
 export type Soort =
   | 'getal' // 20, -13, 7 1/2

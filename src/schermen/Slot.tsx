@@ -1,15 +1,25 @@
-import type { Onderwerp } from '../stof/types.ts'
+import type { Onderwerp, Rondesoort } from '../stof/types.ts'
 
 type Props = {
   onderwerp: Onderwerp
+  soort: Rondesoort
   gewonnen: boolean
   fouten: number
   sterren: number
-  opNogEen: () => void
+  opNogEen: (soort: Rondesoort) => void
   opTerug: () => void
 }
 
-export default function Slot({ onderwerp, gewonnen, fouten, sterren, opNogEen, opTerug }: Props) {
+export default function Slot({
+  onderwerp,
+  soort,
+  gewonnen,
+  fouten,
+  sterren,
+  opNogEen,
+  opTerug,
+}: Props) {
+  const andere: Rondesoort = soort === 'meerkeuze' ? 'open' : 'meerkeuze'
   return (
     <div className="scherm">
       <div className="slot">
@@ -34,8 +44,11 @@ export default function Slot({ onderwerp, gewonnen, fouten, sterren, opNogEen, o
         )}
       </div>
 
-      <button className="groot" onClick={opNogEen}>
+      <button className="groot" onClick={() => opNogEen(soort)}>
         {gewonnen ? 'Nog een ronde' : 'Opnieuw proberen'}
+      </button>
+      <button className="groot rustig" onClick={() => opNogEen(andere)}>
+        {andere === 'open' ? '⌨️ Nu zelf invullen' : '🔘 Nu als meerkeuze'}
       </button>
       <button className="groot rustig" onClick={opTerug}>
         Terug naar het pad

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { Onderwerp } from './stof/types.ts'
+import type { Onderwerp, Rondesoort } from './stof/types.ts'
 import { ONDERWERPEN } from './stof/index.ts'
 import { isOpen } from './engine/pad.ts'
 import type { Gegeven } from './engine/toets.ts'
@@ -10,9 +10,11 @@ import {
   rondeGehaald,
   rondeVerloren,
   schrijf,
+  sleutelVoor,
   type Voortgang,
 } from './opslag/voortgang.ts'
 import Pad from './schermen/Pad.tsx'
+import Onderwerpscherm from './schermen/Onderwerp.tsx'
 import Les from './schermen/Les.tsx'
 import Ronde from './schermen/Ronde.tsx'
 import Slot from './schermen/Slot.tsx'
@@ -20,9 +22,17 @@ import Proeftoets, { Nabespreking } from './schermen/Proeftoets.tsx'
 
 type Scherm =
   | { naam: 'pad' }
+  | { naam: 'onderwerp'; code: string }
   | { naam: 'les'; code: string }
-  | { naam: 'ronde'; code: string; poging: number }
-  | { naam: 'slot'; code: string; gewonnen: boolean; fouten: number; sterren: number }
+  | { naam: 'ronde'; code: string; soort: Rondesoort; poging: number }
+  | {
+      naam: 'slot'
+      code: string
+      soort: Rondesoort
+      gewonnen: boolean
+      fouten: number
+      sterren: number
+    }
   | { naam: 'proeftoets'; poging: number }
   | { naam: 'nabespreking'; gegevens: Gegeven[] }
 
@@ -51,14 +61,28 @@ export default function App() {
     return <div className="scherm">Nog geen onderwerpen geladen.</div>
   }
 
+  if (scherm.naam === 'onderwerp') {
+    const onderwerp = zoek(scherm.code)
+    if (!onderwerp) return null
+    return (
+      <Onderwerpscherm
+        onderwerp={onderwerp}
+        voortgang={voortgang}
+        opTerug={() => setScherm({ naam: 'pad' })}
+        opLes={() => setScherm({ naam: 'les', code: onderwerp.code })}
+        opRonde={(soort) => setScherm({ naam: 'ronde', code: onderwerp.code, soort, poging: 0 })}
+      />
+    )
+  }
+
   if (scherm.naam === 'les') {
     const onderwerp = zoek(scherm.code)
     if (!onderwerp) return null
     return (
       <Les
         onderwerp={onderwerp}
-        opTerug={() => setScherm({ naam: 'pad' })}
-        opStart={() => setScherm({ naam: 'ronde', code: onderwerp.code, poging: 0 })}
+        opTerug={() => setScherm({ naam: 'onderwerp', code: onderwerp.code })}
+        opStart={(soort) => setScherm({ naam: 'ronde', code: onderwerp.code, soort, poging: 0 })}
       />
     )
   }
@@ -66,24 +90,27 @@ export default function App() {
   if (scherm.naam === 'ronde') {
     const onderwerp = zoek(scherm.code)
     if (!onderwerp) return null
+    const soort = scherm.soort
     return (
       <Ronde
-        key={`${onderwerp.code}-${scherm.poging}`}
+        key={`${onderwerp.code}-${soort}-${scherm.poging}`}
         onderwerp={onderwerp}
+        soort={soort}
         herhaling={herhalingVoor(onderwerp.code, voortgang)}
-        opTerug={() => setScherm({ naam: 'pad' })}
+        opTerug={() => setScherm({ naam: 'onderwerp', code: onderwerp.code })}
         opMisser={(code) => setVoortgang((v) => misser(v, code))}
         opKlaar={(gewonnen, fouten) => {
           const nieuw = gewonnen
-            ? rondeGehaald(voortgang, onderwerp.code, fouten)
+            ? rondeGehaald(voortgang, onderwerp.code, soort, fouten)
             : rondeVerloren(voortgang, onderwerp.code, fouten)
           setVoortgang(nieuw)
           setScherm({
             naam: 'slot',
             code: onderwerp.code,
+            soort,
             gewonnen,
             fouten,
-            sterren: nieuw.sterren[onderwerp.code] ?? 0,
+            sterren: nieuw.sterren[sleutelVoor(onderwerp.code, soort)] ?? 0,
           })
         }}
       />
@@ -96,11 +123,14 @@ export default function App() {
     return (
       <Slot
         onderwerp={onderwerp}
+        soort={scherm.soort}
         gewonnen={scherm.gewonnen}
         fouten={scherm.fouten}
         sterren={scherm.sterren}
-        opNogEen={() => setScherm({ naam: 'ronde', code: onderwerp.code, poging: Date.now() })}
-        opTerug={() => setScherm({ naam: 'pad' })}
+        opNogEen={(soort) =>
+          setScherm({ naam: 'ronde', code: onderwerp.code, soort, poging: Date.now() })
+        }
+        opTerug={() => setScherm({ naam: 'onderwerp', code: onderwerp.code })}
       />
     )
   }
@@ -140,7 +170,7 @@ export default function App() {
   return (
     <Pad
       voortgang={voortgang}
-      opKies={(onderwerp) => setScherm({ naam: 'les', code: onderwerp.code })}
+      opKies={(onderwerp) => setScherm({ naam: 'onderwerp', code: onderwerp.code })}
       opProeftoets={() => setScherm({ naam: 'proeftoets', poging: Date.now() })}
     />
   )

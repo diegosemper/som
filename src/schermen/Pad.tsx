@@ -1,5 +1,5 @@
 import type { Onderwerp } from '../stof/types.ts'
-import type { Voortgang } from '../opslag/voortgang.ts'
+import { sterrenVoor, type Voortgang } from '../opslag/voortgang.ts'
 import { hoofdstukken, ONDERWERPEN } from '../stof/index.ts'
 import { totaalSterren, volgendeStap } from '../engine/pad.ts'
 import { rangVoor } from '../ui/praat.ts'
@@ -39,7 +39,7 @@ export default function Pad({ voortgang, opKies, opProeftoets }: Props) {
             Hoofdstuk {groep.nummer} — {groep.naam}
           </div>
           {groep.onderwerpen.map((o) => {
-            const sterren = voortgang.sterren[o.code] ?? 0
+            const sterren = sterrenVoor(voortgang, o.code)
             const klassen = ['tegel', sterren > 0 ? 'af' : '', nu?.code === o.code ? 'nu' : '']
               .filter(Boolean)
               .join(' ')
