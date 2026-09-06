@@ -118,6 +118,39 @@ export function aantalTermen(genormaliseerd: string): number {
   return scheidingen + 1
 }
 
+/**
+ * Wat staat er buiten de haakjes? Bij "4b(3a + b)" is dat 4b, bij "(3a + b)4b"
+ * ook. Zo kunnen we nakijken of er volledig ontbonden is: wie 3(21u + 6)
+ * opschrijft heeft wel de goede waarde, maar niet de grootste factor.
+ *
+ * Numeriek de deler van de inhoud zoeken werkt niet: x + 19 is bij handig
+ * gekozen proefwaarden ook altijd deelbaar door 3, terwijl er niets uit kan.
+ */
+function buitenDeHaakjes(ingevuld: string): string | null {
+  const s = normaliseer(ingevuld)
+  const open = s.indexOf('(')
+  if (open === -1) return null
+
+  let diepte = 0
+  let sluit = -1
+  for (let i = open; i < s.length; i++) {
+    if (s[i] === '(') diepte++
+    else if (s[i] === ')') {
+      diepte--
+      if (diepte === 0) {
+        sluit = i
+        break
+      }
+    }
+  }
+  if (sluit === -1) return null
+
+  const voor = s.slice(0, open).replace(/·$/, '')
+  const na = s.slice(sluit + 1).replace(/^·/, '')
+  const delen = [voor, na].filter((d) => d.length > 0)
+  return delen.length === 0 ? '1' : delen.join('·')
+}
+
 function vormFout(ingevuld: string, eis: Vormeis | undefined): string | null {
   if (!eis) return null
   const s = normaliseer(ingevuld)
@@ -149,6 +182,15 @@ function vormFout(ingevuld: string, eis: Vormeis | undefined): string | null {
   }
   if (eis.maxTermen !== undefined && aantalTermen(s) > eis.maxTermen) {
     return 'De waarde klopt, maar het kan nog korter: er staan termen tussen die je bij elkaar kunt nemen.'
+  }
+  if (eis.factor !== undefined) {
+    const buiten = buitenDeHaakjes(ingevuld)
+    if (buiten === null) {
+      return 'Er wordt om haakjes gevraagd: zet de gemeenschappelijke factor ervoor.'
+    }
+    if (!zelfdeWaarde(buiten, eis.factor)) {
+      return 'De waarde klopt, maar je hebt niet de grootste gemeenschappelijke factor buiten de haakjes gezet.'
+    }
   }
   if (eis.grondtal !== undefined) {
     const g = eis.grondtal

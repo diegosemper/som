@@ -15,6 +15,12 @@ import { onderwerp as c1b } from './codes/1b.ts'
 import { onderwerp as c1c } from './codes/1c.ts'
 import { onderwerp as c1d } from './codes/1d.ts'
 import { onderwerp as c1e } from './codes/1e.ts'
+import { onderwerp as c3a } from './codes/3a.ts'
+import { onderwerp as c3b } from './codes/3b.ts'
+import { onderwerp as c3c } from './codes/3c.ts'
+import { onderwerp as c3d } from './codes/3d.ts'
+import { onderwerp as c3e } from './codes/3e.ts'
+import { onderwerp as c7a } from './codes/7a.ts'
 import { onderwerp as c4a } from './codes/4a.ts'
 import { onderwerp as c4b } from './codes/4b.ts'
 import { onderwerp as c4c } from './codes/4c.ts'
@@ -47,7 +53,12 @@ const PAD = [
   '7b', '7c', '5c', '5d', '5e', '7d', '7e',
 ]
 
-const AANWEZIG: Onderwerp[] = [c1a, c1b, c1c, c5a, c5b, c4a, c4b, c4c, c4d, c4e, c1d, c1e]
+const AANWEZIG: Onderwerp[] = [
+  c1a, c1b,
+  c1c, c5a, c5b, c4a, c4b, c4c, c4d, c4e,
+  c3a, c3b, c3c, c3d, c3e,
+  c1d, c1e, c7a,
+]
 
 /**
  * Een valkuil die toevallig hetzelfde uitkomt als het goede antwoord zou de

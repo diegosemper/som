@@ -46,6 +46,8 @@ export type Vormeis = {
    * niet als herleiding van zichzelf doorgaat.
    */
   maxTermen?: number
+  /** Wat er bij ontbinden in factoren buiten de haakjes hoort te staan. */
+  factor?: string
 }
 
 export type Opgave = {

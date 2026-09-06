@@ -96,7 +96,13 @@ export default function Ronde({ onderwerp, opTerug, opKlaar, opMisser }: Props) 
 
       <div className="vraagvak">
         <div className="opdracht">{opgave.opdracht}</div>
-        <div className={opgave.vraag.length > 22 ? 'vraag lang' : 'vraag'}>{opgave.vraag}</div>
+        <div
+          className={
+            opgave.vraag.length > 40 ? 'vraag verhaal' : opgave.vraag.length > 22 ? 'vraag lang' : 'vraag'
+          }
+        >
+          {opgave.vraag}
+        </div>
       </div>
 
       <div className={'antwoordvak' + (invoer ? '' : ' leeg') + (melding ? ' mis' : '')}>

@@ -261,6 +261,15 @@ button {
   font-size: 26px;
 }
 
+/* Reeksen getallen en vraagzinnen mogen gewoon afbreken. */
+.vraag.verhaal {
+  font-size: 20px;
+  font-weight: 550;
+  white-space: normal;
+  line-height: 1.45;
+  overflow-x: visible;
+}
+
 .antwoordvak {
   display: flex;
   align-items: center;
