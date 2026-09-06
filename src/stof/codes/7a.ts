@@ -30,7 +30,16 @@ const patronen: ((rng: Rng) => Bouwsel)[] = [
           { doe: 'Deel beide elementen daardoor', werd: `${k1} ÷ ${dd} = ${k1 / dd} en ${k2} ÷ ${dd} = ${k2 / dd}` },
           { doe: 'Zet de factor voor de haakjes', werd: `${dd}(${binnen})` },
         ],
-        valkuilen: [],
+        valkuilen: [
+          {
+            fout: `${dd}(${toonSom([term(k1 / dd, { [x]: 1 }), term(k2)])})`,
+            heet: 'Je deelde alleen het eerste element. Álle elementen binnen de haakjes moeten door de factor.',
+          },
+          {
+            fout: `${dd}(${toonSom([term(k1, { [x]: 1 }), term(k2 / dd)])})`,
+            heet: 'Het eerste element is niet gedeeld. Wat je buiten de haakjes zet, haal je overal uit.',
+          },
+        ],
         tip: 'Zoek altijd de grótste gemeenschappelijke deler, anders kan het nog korter.',
       }
     }
@@ -44,7 +53,16 @@ const patronen: ((rng: Rng) => Bouwsel)[] = [
         { doe: 'Deel beide elementen daardoor', werd: `${k1} ÷ ${d} = ${p} en ${k2} ÷ ${d} = ${q}` },
         { doe: 'Zet de gevonden factor voor de haakjes', werd: `${d}(${binnen})` },
       ],
-      valkuilen: [],
+      valkuilen: [
+        {
+          fout: `${d}(${toonSom([term(p, { [x]: 1 }), term(k2)])})`,
+          heet: 'Je deelde alleen het eerste element. Álle elementen binnen de haakjes moeten door de factor.',
+        },
+        {
+          fout: `${d}(${toonSom([term(k1, { [x]: 1 }), term(q)])})`,
+          heet: 'Het eerste element is niet gedeeld. Wat je buiten de haakjes zet, haal je overal uit.',
+        },
+      ],
       tip: 'Zoek de grootste gemeenschappelijke deler en deel álle elementen daardoor.',
     }
   },
@@ -63,7 +81,16 @@ const patronen: ((rng: Rng) => Bouwsel)[] = [
         { doe: `Deel beide door ${x}`, werd: `${x}² ÷ ${x} = ${x} en ${toonTerm(term(k, { [x]: 1 }))} ÷ ${x} = ${k}` },
         { doe: 'Zet de letter voor de haakjes', werd: `${x}(${binnen})` },
       ],
-      valkuilen: [],
+      valkuilen: [
+        {
+          fout: `${x}(${toonSom([term(1, { [x]: 2 }), term(k)])})`,
+          heet: `Ook ${x}² moet door ${x} gedeeld worden — daar blijft ${x} van over, niet ${x}².`,
+        },
+        {
+          fout: `${x}(${toonSom([term(1, { [x]: 1 }), term(k, { [x]: 1 })])})`,
+          heet: `Het tweede element is niet gedeeld: ${toonTerm(term(k, { [x]: 1 }))} ÷ ${x} is ${k}.`,
+        },
+      ],
       tip: 'Een gemeenschappelijke factor kan ook een letter zijn.',
     }
   },
@@ -90,7 +117,12 @@ const patronen: ((rng: Rng) => Bouwsel)[] = [
         { doe: 'Samen dus buiten de haakjes', werd: buiten },
         { doe: 'Deel elk element door die factor', werd: `${buiten}(${binnen})` },
       ],
-      valkuilen: [],
+      valkuilen: [
+        {
+          fout: `${echt}(${binnen})`,
+          heet: `De ${b} zit in beide elementen, dus die gaat ook mee naar buiten de haakjes.`,
+        },
+      ],
       tip: 'De gemeenschappelijke factor kan een getal én een letter zijn.',
     }
   },
@@ -114,7 +146,12 @@ const patronen: ((rng: Rng) => Bouwsel)[] = [
         },
         { doe: 'Vergeet de 1 niet', werd: `${buiten}(${binnen})` },
       ],
-      valkuilen: [],
+      valkuilen: [
+        {
+          fout: `${buiten}(${toonTerm(term(1, { [a]: hoog - laag }))})`,
+          heet: 'Je vergat de 1. Haal je een element helemaal weg, dan blijft daar een 1 staan — geen leegte.',
+        },
+      ],
       tip: 'Haal je een element helemaal weg, dan blijft er een 1 achter — niet niets.',
     }
   },

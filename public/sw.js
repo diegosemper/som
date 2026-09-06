@@ -6,7 +6,7 @@
  * want anders zie je na een nieuwe versie nog de oude app.
  */
 
-const CACHE = 'som-v1'
+const CACHE = 'som-v2'
 
 self.addEventListener('install', () => {
   self.skipWaiting()

@@ -2,8 +2,23 @@
 
 import { renderToString } from 'react-dom/server'
 import App from '../src/App.tsx'
+import Les from '../src/schermen/Les.tsx'
+import { ONDERWERPEN } from '../src/stof/index.ts'
 
 const html = renderToString(<App />)
+
+// Het lesje van elk onderwerp moet ook tekenen — daar zit de meeste nieuwe code.
+const lesFouten: string[] = []
+for (const onderwerp of ONDERWERPEN) {
+  try {
+    const les = renderToString(
+      <Les onderwerp={onderwerp} opStart={() => {}} opTerug={() => {}} />,
+    )
+    if (les.length < 200) lesFouten.push(`${onderwerp.code}: lesje tekent bijna niets`)
+  } catch (fout) {
+    lesFouten.push(`${onderwerp.code}: ${(fout as Error).message}`)
+  }
+}
 
 const eisen: [string, boolean][] = [
   ['de titel SOM staat op het scherm', html.includes('SOM')],
@@ -14,7 +29,13 @@ const eisen: [string, boolean][] = [
   ['er staan hoofdstukken', html.includes('Hoofdstuk')],
   ['de hoofdstuknamen staan erbij', html.includes('Kansen') && html.includes('Lijnen')],
   ['er is echt inhoud', html.length > 2000],
+  ['de rang staat op het pad', html.includes('xp')],
+  ['alle lesjes tekenen', lesFouten.length === 0],
 ]
+
+if (lesFouten.length > 0) {
+  for (const fout of lesFouten) console.error('  ! ' + fout)
+}
 
 const mislukt = eisen.filter(([, klopt]) => !klopt)
 if (mislukt.length > 0) {

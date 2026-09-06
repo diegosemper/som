@@ -299,6 +299,222 @@ button {
   margin-top: 8px;
 }
 
+/* ---------------- lesje ---------------- */
+
+.stipjes {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.stip {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: #2a3244;
+  transition: background 0.2s ease;
+}
+
+.stip.aan {
+  background: var(--accent);
+}
+
+.lesvak {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 0;
+  overflow-y: auto;
+}
+
+.bubbel {
+  background: var(--kaart);
+  border: 1px solid var(--kaart-rand);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--rand);
+  padding: 16px;
+}
+
+.bubbel p {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.5;
+  color: #e4e9f5;
+}
+
+.gast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.gastemoji {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.gastemoji.klein {
+  font-size: 18px;
+}
+
+.gastnaam {
+  font-size: 13px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.stappenplan {
+  margin-top: 12px;
+  background: #10141e;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.stappenplan summary {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stappenplan ol {
+  margin: 10px 0 2px;
+  padding-left: 20px;
+}
+
+.stappenplan li {
+  color: #cdd5e6;
+  font-size: 14px;
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.recept {
+  background: var(--kaart);
+  border: 1px solid var(--kaart-rand);
+  border-left: 4px solid var(--goed);
+  border-radius: var(--rand);
+  padding: 16px;
+}
+
+.recept ol {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.recept li {
+  font-size: 17px;
+  line-height: 1.45;
+  margin-bottom: 10px;
+  color: #e4e9f5;
+}
+
+.recept li::marker {
+  color: var(--goed);
+  font-weight: 700;
+}
+
+.receptvoet {
+  color: var(--zacht);
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.lesje-kop {
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--zacht);
+  margin-bottom: 10px;
+}
+
+.reactie {
+  margin-top: 14px;
+  background: #21182a;
+  border-left: 3px solid var(--fout);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.reactie.oke {
+  border-left-color: var(--goed);
+  background: #142218;
+}
+
+.keuze.juist {
+  border-color: var(--goed);
+  color: var(--goed);
+}
+
+.keuze.mis {
+  border-color: var(--fout);
+  color: var(--fout);
+}
+
+.keuze.flauw {
+  opacity: 0.4;
+}
+
+.keuze:disabled {
+  cursor: default;
+}
+
+/* ---------------- flits bij een goed antwoord ---------------- */
+
+.flits {
+  position: fixed;
+  left: 50%;
+  bottom: 96px;
+  transform: translateX(-50%);
+  background: var(--goed-diep);
+  color: #eafff3;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  z-index: 12;
+  animation: opkomen 0.9s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes opkomen {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -14px);
+  }
+}
+
+.rang {
+  color: var(--zacht);
+  font-size: 13px;
+  margin-top: -4px;
+  padding-bottom: 6px;
+}
+
+.rang b {
+  color: var(--accent);
+}
+
 .codetag {
   display: inline-block;
   background: #232a3a;

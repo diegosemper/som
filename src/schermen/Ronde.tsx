@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import type { Onderwerp } from '../stof/types.ts'
 import { afloop, goed, huidige, mis, startRonde, type Rondestand } from '../engine/ronde.ts'
 import { kijkNa, type Oordeel } from '../engine/antwoord.ts'
+import { receptVoor } from '../stof/gasten.ts'
+import { juich, troost } from '../ui/praat.ts'
 import Toetsenbord from '../ui/Toetsenbord.tsx'
 
 type Props = {
@@ -27,6 +29,13 @@ export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser
   const [invoer, setInvoer] = useState('')
   const [melding, setMelding] = useState<string | null>(null)
   const [oordeel, setOordeel] = useState<Oordeel | null>(null)
+  const [flits, setFlits] = useState<{ tekst: string; id: number } | null>(null)
+
+  useEffect(() => {
+    if (!flits) return
+    const klok = setTimeout(() => setFlits(null), 900)
+    return () => clearTimeout(klok)
+  }, [flits])
 
   const opgave = huidige(stand)
   const status = afloop(stand)
@@ -51,9 +60,11 @@ export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser
     if (!opgave) return
     const uitslag = kijkNa(waarde, opgave)
     if (uitslag.goed) {
-      setStand(goed(stand))
+      const volgende = goed(stand)
+      setStand(volgende)
       setInvoer('')
       setMelding(null)
+      setFlits({ tekst: juich(volgende.reeks, volgende.klaar), id: Date.now() })
       return
     }
     if (uitslag.soort === 'vorm') {
@@ -144,11 +155,19 @@ export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser
         </>
       )}
 
+      {flits && (
+        <div className="flits" key={flits.id}>
+          {flits.tekst}
+        </div>
+      )}
+
       {oordeel && !oordeel.goed && (
         <div className="blad">
           <div className="binnen">
             <div className="bladkop mis">
-              {oordeel.soort === 'valkuil' ? 'Bijna — bekende valkuil' : 'Niet goed'}
+              {oordeel.soort === 'valkuil'
+                ? 'Bekende valkuil — daar trapt bijna iedereen in'
+                : troost(stand.fouten)}
             </div>
             {oordeel.soort === 'valkuil' && <div className="valkuil">{oordeel.heet}</div>}
             <div className="juist">
@@ -167,6 +186,18 @@ export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser
             ))}
 
             <div className="tip">{opgave.tip}</div>
+
+            {receptVoor(opgave.code).length > 0 && (
+              <details className="stappenplan">
+                <summary>Stappenplan voor dit soort sommen</summary>
+                <ol>
+                  {receptVoor(opgave.code).map((stap, i) => (
+                    <li key={i}>{stap}</li>
+                  ))}
+                </ol>
+              </details>
+            )}
+
             <button className="groot" onClick={verder}>
               Snap ik — deze som komt zo terug
             </button>

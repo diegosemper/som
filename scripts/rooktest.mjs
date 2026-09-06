@@ -9,8 +9,51 @@ import { ONDERWERPEN } from '../src/stof/index.ts'
 import { afloop, goed, huidige, mis, startRonde } from '../src/engine/ronde.ts'
 import { kijkNa } from '../src/engine/antwoord.ts'
 import { maakToets, TOETS_LENGTE } from '../src/engine/toets.ts'
+import { bouwLes } from '../src/engine/les.ts'
+import { introVoor, receptVoor } from '../src/stof/gasten.ts'
 
 const klachten = []
+
+// Elk onderwerp moet een lesje opleveren dat je kunt doorlopen. Meerdere zaden,
+// want het voorbeeld en de controlevraag worden elke keer opnieuw getrokken.
+for (const onderwerp of ONDERWERPEN) {
+  const code = onderwerp.code
+
+  if (introVoor(code).join(' ').startsWith('Even kijken hoe dit werkt')) {
+    klachten.push(`${code}: geen eigen introductie geschreven`)
+  }
+  if (receptVoor(code).length < 3) {
+    klachten.push(`${code}: stappenplan van minder dan drie stappen`)
+  }
+
+  for (const zaad of [1, 7, 12345, 98765, 555]) {
+    const les = bouwLes(onderwerp, zaad)
+    const soorten = les.map((b) => b.soort)
+
+    for (const nodig of ['praat', 'recept', 'regel', 'uitwerking', 'kies']) {
+      if (!soorten.includes(nodig)) klachten.push(`${code} (zaad ${zaad}): lesje zonder ${nodig}`)
+    }
+
+    for (const beurt of les) {
+      if (beurt.soort !== 'kies') continue
+      const goede = beurt.opties.filter((o) => o.goed)
+      if (goede.length !== 1) {
+        klachten.push(`${code} (zaad ${zaad}): controlevraag heeft ${goede.length} goede antwoorden`)
+      }
+      if (beurt.opties.length < 2) {
+        klachten.push(`${code} (zaad ${zaad}): controlevraag met te weinig keuzes`)
+      }
+      if (new Set(beurt.opties.map((o) => o.tekst)).size !== beurt.opties.length) {
+        klachten.push(`${code} (zaad ${zaad}): controlevraag met dubbele keuzes`)
+      }
+      for (const optie of beurt.opties) {
+        if (!optie.reactie || optie.reactie.trim().length < 4) {
+          klachten.push(`${code} (zaad ${zaad}): keuze "${optie.tekst}" zonder reactie`)
+        }
+      }
+    }
+  }
+}
 
 // De proeftoets moet twintig sommen leveren die allemaal nagekeken kunnen worden.
 for (const zaad of [1, 2, 3]) {

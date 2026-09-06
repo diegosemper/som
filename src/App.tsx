@@ -13,14 +13,14 @@ import {
   type Voortgang,
 } from './opslag/voortgang.ts'
 import Pad from './schermen/Pad.tsx'
-import Uitleg from './schermen/Uitleg.tsx'
+import Les from './schermen/Les.tsx'
 import Ronde from './schermen/Ronde.tsx'
 import Slot from './schermen/Slot.tsx'
 import Proeftoets, { Nabespreking } from './schermen/Proeftoets.tsx'
 
 type Scherm =
   | { naam: 'pad' }
-  | { naam: 'uitleg'; code: string }
+  | { naam: 'les'; code: string }
   | { naam: 'ronde'; code: string; poging: number }
   | { naam: 'slot'; code: string; gewonnen: boolean; fouten: number; sterren: number }
   | { naam: 'proeftoets'; poging: number }
@@ -51,11 +51,11 @@ export default function App() {
     return <div className="scherm">Nog geen onderwerpen geladen.</div>
   }
 
-  if (scherm.naam === 'uitleg') {
+  if (scherm.naam === 'les') {
     const onderwerp = zoek(scherm.code)
     if (!onderwerp) return null
     return (
-      <Uitleg
+      <Les
         onderwerp={onderwerp}
         opTerug={() => setScherm({ naam: 'pad' })}
         opStart={() => setScherm({ naam: 'ronde', code: onderwerp.code, poging: 0 })}
@@ -140,7 +140,7 @@ export default function App() {
   return (
     <Pad
       voortgang={voortgang}
-      opKies={(onderwerp) => setScherm({ naam: 'uitleg', code: onderwerp.code })}
+      opKies={(onderwerp) => setScherm({ naam: 'les', code: onderwerp.code })}
       opProeftoets={() => setScherm({ naam: 'proeftoets', poging: Date.now() })}
     />
   )

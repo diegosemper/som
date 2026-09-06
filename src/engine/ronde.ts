@@ -18,6 +18,8 @@ export type Rondestand = {
   totaal: number
   levens: number
   fouten: number
+  /** Hoeveel goede antwoorden achter elkaar. Voor de combo op het scherm. */
+  reeks: number
 }
 
 export type Afloop = 'bezig' | 'gewonnen' | 'verloren'
@@ -60,6 +62,7 @@ export function startRonde(
     totaal: RONDE_LENGTE,
     levens: LEVENS,
     fouten: 0,
+    reeks: 0,
   }
 }
 
@@ -68,7 +71,12 @@ export function huidige(stand: Rondestand): Opgave | undefined {
 }
 
 export function goed(stand: Rondestand): Rondestand {
-  return { ...stand, wachtrij: stand.wachtrij.slice(1), klaar: stand.klaar + 1 }
+  return {
+    ...stand,
+    wachtrij: stand.wachtrij.slice(1),
+    klaar: stand.klaar + 1,
+    reeks: stand.reeks + 1,
+  }
 }
 
 export function mis(stand: Rondestand): Rondestand {
@@ -79,6 +87,7 @@ export function mis(stand: Rondestand): Rondestand {
     wachtrij: eerste ? [...rest, eerste] : rest,
     levens: stand.levens - 1,
     fouten: stand.fouten + 1,
+    reeks: 0,
   }
 }
 

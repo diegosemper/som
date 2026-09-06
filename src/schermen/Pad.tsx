@@ -2,6 +2,7 @@ import type { Onderwerp } from '../stof/types.ts'
 import type { Voortgang } from '../opslag/voortgang.ts'
 import { hoofdstukken, ONDERWERPEN } from '../stof/index.ts'
 import { isOpen, totaalSterren, volgendeStap } from '../engine/pad.ts'
+import { rangVoor } from '../ui/praat.ts'
 import Sterren from '../ui/Sterren.tsx'
 
 type Props = {
@@ -14,6 +15,7 @@ export default function Pad({ voortgang, opKies, opProeftoets }: Props) {
   const groepen = hoofdstukken()
   const nu = volgendeStap(ONDERWERPEN, voortgang)
   const totaal = totaalSterren(ONDERWERPEN, voortgang)
+  const rang = rangVoor(voortgang.xp)
 
   return (
     <div className="scherm">
@@ -24,6 +26,11 @@ export default function Pad({ voortgang, opKies, opProeftoets }: Props) {
         <span className="pil">
           ★ {totaal.gehaald}/{totaal.mogelijk}
         </span>
+      </div>
+
+      <div className="rang">
+        {voortgang.xp} xp · <b>{rang.naam}</b>
+        {rang.volgende !== null && ` · nog ${rang.volgende - voortgang.xp} tot de volgende rang`}
       </div>
 
       {groepen.map((groep) => (
