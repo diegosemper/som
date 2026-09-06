@@ -14,7 +14,7 @@
 export type Knoop =
   | { t: 'getal'; waarde: number }
   | { t: 'letter'; naam: string }
-  | { t: 'op'; op: '+' | '-' | '·' | '/' | '^'; links: Knoop; rechts: Knoop }
+  | { t: 'op'; op: '+' | '-' | '·' | '/' | '÷' | '^'; links: Knoop; rechts: Knoop }
   | { t: 'min'; van: Knoop }
   | { t: 'wortel'; van: Knoop }
 
@@ -35,7 +35,9 @@ export function normaliseer(ruw: string): string {
   // Streepjes, maaltekens, deeltekens.
   s = s.replace(/[−–—]/g, '-')
   s = s.replace(/[×∙⋅•*]/g, '·')
-  s = s.replace(/[÷:]/g, '/')
+  // ÷ blijft ÷: dat scheidt hele breuken van elkaar en bindt losser dan de
+  // breukstreep /. Zo is 2/3 ÷ 1/2 gelijk aan 4/3 en niet aan 1/3.
+  s = s.replace(/:/g, '÷')
 
   // Woorden die mensen intypen.
   s = s.replace(/sqrt/g, '√').replace(/wortel/g, '√').replace(/\bpi\b/g, 'π')
@@ -107,7 +109,7 @@ function knip(s: string): Teken[] | null {
       i++
       continue
     }
-    if ('+-·/^'.includes(c)) {
+    if ('+-·/÷^'.includes(c)) {
       uit.push({ t: 'op', op: c })
       i++
       continue
@@ -152,17 +154,36 @@ export function ontleed(ruw: string): Knoop | null {
     return links
   }
 
+  /**
+   * Keer en gedeeld-door, van links naar rechts. Het deelteken ÷ hoort hier
+   * thuis en niet bij de breukstreep: 24 ÷ 3 · 2 is 16, en 2/3 ÷ 1/2 is 4/3.
+   */
   function product(): Knoop | null {
+    let links = breuk()
+    if (!links) return null
+    for (;;) {
+      const t = nu()
+      if (!t || t.t !== 'op' || (t.op !== '·' && t.op !== '÷')) break
+      const op: '·' | '÷' = t.op === '·' ? '·' : '÷'
+      p++
+      const rechts = breuk()
+      if (!rechts) return null
+      links = { t: 'op', op, links, rechts }
+    }
+    return links
+  }
+
+  /** De breukstreep bindt strakker dan ÷, zodat 3/x ÷ 5/y werkt zoals bedoeld. */
+  function breuk(): Knoop | null {
     let links = blok()
     if (!links) return null
     for (;;) {
       const t = nu()
-      if (!t || t.t !== 'op' || (t.op !== '·' && t.op !== '/')) break
-      const op: '·' | '/' = t.op === '·' ? '·' : '/'
+      if (!t || t.t !== 'op' || t.op !== '/') break
       p++
       const rechts = blok()
       if (!rechts) return null
-      links = { t: 'op', op, links, rechts }
+      links = { t: 'op', op: '/', links, rechts }
     }
     return links
   }
@@ -265,7 +286,9 @@ export function reken(k: Knoop, waarden: Record<string, number>): number {
         case '+': return a + b
         case '-': return a - b
         case '·': return a * b
-        case '/': return b === 0 ? NaN : a / b
+        case '/':
+        case '÷':
+          return b === 0 ? NaN : a / b
         case '^': return Math.pow(a, b)
       }
     }

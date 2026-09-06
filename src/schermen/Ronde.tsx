@@ -45,9 +45,9 @@ export default function Ronde({ onderwerp, opTerug, opKlaar, opMisser }: Props) 
   const extra: string[] = []
   if (opgave.soort === 'oplossingen') extra.push('=', '∨')
 
-  function controleer() {
+  function beoordeel(waarde: string) {
     if (!opgave) return
-    const uitslag = kijkNa(invoer, opgave)
+    const uitslag = kijkNa(waarde, opgave)
     if (uitslag.goed) {
       setStand(goed(stand))
       setInvoer('')
@@ -105,24 +105,39 @@ export default function Ronde({ onderwerp, opTerug, opKlaar, opMisser }: Props) 
         </div>
       </div>
 
-      <div className={'antwoordvak' + (invoer ? '' : ' leeg') + (melding ? ' mis' : '')}>
-        {invoer || 'jouw antwoord'}
-      </div>
-      {melding && <div className="melding">{melding}</div>}
+      {opgave.invoer === 'keuze' ? (
+        <>
+          {melding && <div className="melding">{melding}</div>}
+          <div className="keuzes">
+            {(opgave.keuzes ?? []).map((keuze) => (
+              <button key={keuze} className="keuze" onClick={() => beoordeel(keuze)}>
+                {keuze}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className={'antwoordvak' + (invoer ? '' : ' leeg') + (melding ? ' mis' : '')}>
+            {invoer || 'jouw antwoord'}
+          </div>
+          {melding && <div className="melding">{melding}</div>}
 
-      <Toetsenbord
-        letters={letters}
-        extra={extra}
-        waarde={invoer}
-        zet={(nieuw) => {
-          setInvoer(nieuw)
-          setMelding(null)
-        }}
-      />
+          <Toetsenbord
+            letters={letters}
+            extra={extra}
+            waarde={invoer}
+            zet={(nieuw) => {
+              setInvoer(nieuw)
+              setMelding(null)
+            }}
+          />
 
-      <button className={'groot' + (invoer ? '' : ' uit')} onClick={controleer}>
-        Controleer
-      </button>
+          <button className={'groot' + (invoer ? '' : ' uit')} onClick={() => beoordeel(invoer)}>
+            Controleer
+          </button>
+        </>
+      )}
 
       {oordeel && !oordeel.goed && (
         <div className="blad">

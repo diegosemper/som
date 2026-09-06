@@ -38,6 +38,8 @@ export type Vormeis = {
   geenBreuk?: boolean
   geenHaakjes?: boolean
   geenMaal?: boolean
+  /** Er mag geen ÷ meer in staan: de deling moet uitgewerkt zijn. */
+  geenDeelteken?: boolean
   alleenGetal?: boolean
   grondtal?: number // "schrijf als een macht van 3"
   /**
@@ -48,6 +50,18 @@ export type Vormeis = {
   maxTermen?: number
   /** Wat er bij ontbinden in factoren buiten de haakjes hoort te staan. */
   factor?: string
+  /** Antwoord moet als gemengd getal: 17/15 mag niet, 1 2/15 wel. */
+  gemengd?: boolean
+  /** Antwoord moet juist als één breuk: 1 3/5 mag niet, 8/5 wel. */
+  alsBreuk?: boolean
+  /**
+   * Ruwe maat voor "kan het nog korter": een niet-vereenvoudigde breuk is in
+   * de praktijk altijd langer opgeschreven dan de vereenvoudigde. Wordt met
+   * ruime marge gezet, en een overtreding kost geen hartje.
+   */
+  hoogstensTekens?: number
+  /** Er mag geen letter meer zijn die boven én onder de streep in élke term zit. */
+  geenGedeeldeLetter?: boolean
 }
 
 export type Opgave = {

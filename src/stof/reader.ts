@@ -128,4 +128,83 @@ export const READEROPGAVEN: Readeropgave[] = [
   { waar: '4.3b', som: 'q² − 32q', antwoord: 'q(q − 32)' },
   { waar: '4.3c', som: '12ab + 4b²', antwoord: '4b(3a + b)' },
   { waar: '4.3d', som: 'a² + a⁴', antwoord: 'a²(a² + 1)' },
+
+  // Opdracht 5.1 — breuken vereenvoudigen
+  { waar: '5.1a', som: '5/15', antwoord: '1/3' },
+  { waar: '5.1b', som: '10/30', antwoord: '1/3' },
+  { waar: '5.1c', som: '24/48', antwoord: '1/2' },
+  { waar: '5.1d', som: '3/12', antwoord: '1/4' },
+  { waar: '5.1e', som: '24/32', antwoord: '3/4' },
+  { waar: '5.1f', som: '21/49', antwoord: '3/7' },
+
+  // Opdracht 5.2 — optellen en aftrekken
+  { waar: '5.2a', som: '3/8 + 5/8', antwoord: '1' },
+  { waar: '5.2b', som: '1/2 + 1/4', antwoord: '3/4' },
+  { waar: '5.2c', som: '2/3 − 1/6', antwoord: '1/2' },
+  { waar: '5.2d', som: '1/4 + 2/5', antwoord: '13/20' },
+  { waar: '5.2e', som: '3/8 + 1/7', antwoord: '29/56' },
+  { waar: '5.2f', som: '5/6 − 5/8', antwoord: '5/24' },
+
+  // Opdracht 5.3.1 — helen eruit halen
+  { waar: '5.3.1a', som: '15/5', antwoord: '3' },
+  { waar: '5.3.1b', som: '30/13', antwoord: '2 4/13' },
+  { waar: '5.3.1c', som: '43/9', antwoord: '4 7/9' },
+  { waar: '5.3.1d', som: '12/7', antwoord: '1 5/7' },
+  { waar: '5.3.1e', som: '24/18', antwoord: '1 1/3' },
+  { waar: '5.3.1f', som: '49/21', antwoord: '2 1/3' },
+
+  // Opdracht 5.3.2 — als één breuk
+  { waar: '5.3.2a', som: '1 3/5', antwoord: '8/5' },
+  { waar: '5.3.2b', som: '2 3/8', antwoord: '19/8' },
+  { waar: '5.3.2c', som: '1 7/9', antwoord: '16/9' },
+  { waar: '5.3.2d', som: '5 2/3', antwoord: '17/3' },
+  { waar: '5.3.2e', som: '3 6/11', antwoord: '39/11' },
+  { waar: '5.3.2f', som: '4 4/5', antwoord: '24/5' },
+
+  // Opdracht 5.4 — keer en gedeeld
+  { waar: '5.4a', som: '5/6 · 2/3', antwoord: '5/9' },
+  { waar: '5.4b', som: '2/8 · 3/5', antwoord: '3/20' },
+  { waar: '5.4c', som: '3/4 · 7/9', antwoord: '7/12' },
+  { waar: '5.4d', som: '2/3 ÷ 1/2', antwoord: '1 1/3' },
+  { waar: '5.4e', som: '8/9 ÷ 1/4', antwoord: '3 5/9' },
+  { waar: '5.4f', som: '3/4 ÷ 5/7', antwoord: '1 1/20' },
+  { waar: '5.4.3', som: '1/3 + 2/5 ÷ 1/2', antwoord: '1 2/15' },
+
+  // Opdracht 6.1 — letterbreuken vereenvoudigen
+  { waar: '6.1a', som: 'x² / x³', antwoord: '1/x' },
+  { waar: '6.1b', som: '3x² / 9y²', antwoord: 'x²/(3y²)' },
+  { waar: '6.1c', som: '2y / 6xy', antwoord: '1/(3x)' },
+  { waar: '6.1d', som: '(2x² + 4x) / 8x³', antwoord: '(x + 2)/(4x²)' },
+  { waar: '6.1e', som: '(2x²y + 3xy) / 4y²', antwoord: '(2x² + 3x)/(4y)' },
+  { waar: '6.1f', som: '(3ab + 6a³b) / 12a²b²', antwoord: '(1 + 2a²)/(4ab)' },
+
+  // Opdracht 6.2 — letterbreuken optellen
+  { waar: '6.2a', som: '2/x + 3/4', antwoord: '(3x + 8)/(4x)' },
+  { waar: '6.2b', som: '3/x + 4/y', antwoord: '(4x + 3y)/(xy)' },
+  { waar: '6.2c', som: '3x/y + 2y/4x', antwoord: '(6x² + y²)/(2xy)' },
+  { waar: '6.2d', som: '2/xy + 8x/y²', antwoord: '(8x² + 2y)/(xy²)' },
+  { waar: '6.2e', som: '3x/8y + 5/2x', antwoord: '(3x² + 20y)/(8xy)' },
+  { waar: '6.2f', som: '5/2x − 3/6y', antwoord: '(5y − x)/(2xy)' },
+
+  // Opdracht 6.3 — letterbreuken keer en gedeeld
+  { waar: '6.3a', som: '2x/3y · 3/x', antwoord: '2/y' },
+  { waar: '6.3b', som: '5x/y ÷ 3y/x', antwoord: '5x²/(3y²)' },
+  { waar: '6.3c', som: '4x²y/5x + 3x/5y', antwoord: '(4xy² + 3x)/(5y)' },
+  { waar: '6.3d', som: '3/x ÷ 5/y', antwoord: '3y/(5x)' },
+  { waar: '6.3e', som: '2x/y ÷ 3y²/5xy', antwoord: '10x²/(3y²)' },
+  { waar: '6.3f', som: '8x/5 ÷ 5y/4x', antwoord: '32x²/(25y)' },
+  { waar: '6.3.slot', som: '4r/q + −2r/3q · 1/r', antwoord: '(12r − 2)/(3q)' },
+
+  // Opdracht 7.1 — invullen in een lineaire formule
+  { waar: '7.1a', som: '−2(−3) + 5', antwoord: '11' },
+  { waar: '7.1b', som: '8(−3) − 3', antwoord: '−27' },
+
+  // Hoofdstuk 8 — voorbeelden uit de tekst
+  { waar: '8.1', som: '3(x + 1)(x + 3)', antwoord: '3x² + 12x + 9' },
+  { waar: '8.5a', som: '(x + 2)(x + 3)', antwoord: 'x² + 5x + 6' },
+  { waar: '8.5b', som: '(x + 5)(x + 3)', antwoord: 'x² + 8x + 15' },
+  { waar: '8.5c', som: '2(x − 3)(x + 8)', antwoord: '2x² + 10x − 48' },
+  { waar: '8.5d', som: '(x² + 1)(x² + 1)', antwoord: 'x⁴ + 2x² + 1' },
+  { waar: '8.6', som: '(x − 8)(x − 8)', antwoord: 'x² − 16x + 64' },
+  { waar: '8.7', som: '−1(b − 6)(b + 5)', antwoord: '−b² + b + 30' },
 ]

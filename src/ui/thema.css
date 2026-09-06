@@ -299,6 +299,30 @@ button {
   margin-top: 8px;
 }
 
+/* ---------------- meerkeuze ---------------- */
+
+.keuzes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.keuze {
+  background: var(--kaart);
+  border: 2px solid var(--kaart-rand);
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.keuze:active {
+  border-color: var(--accent);
+  background: #232a3a;
+}
+
 /* ---------------- toetsenbord ---------------- */
 
 .toetsen {

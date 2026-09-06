@@ -21,6 +21,23 @@ import { onderwerp as c3c } from './codes/3c.ts'
 import { onderwerp as c3d } from './codes/3d.ts'
 import { onderwerp as c3e } from './codes/3e.ts'
 import { onderwerp as c7a } from './codes/7a.ts'
+import { onderwerp as c2a } from './codes/2a.ts'
+import { onderwerp as c2b } from './codes/2b.ts'
+import { onderwerp as c2c } from './codes/2c.ts'
+import { onderwerp as c2d } from './codes/2d.ts'
+import { onderwerp as c2e } from './codes/2e.ts'
+import { onderwerp as c6a } from './codes/6a.ts'
+import { onderwerp as c6b } from './codes/6b.ts'
+import { onderwerp as c6c } from './codes/6c.ts'
+import { onderwerp as c6d } from './codes/6d.ts'
+import { onderwerp as c6e } from './codes/6e.ts'
+import { onderwerp as c7b } from './codes/7b.ts'
+import { onderwerp as c7c } from './codes/7c.ts'
+import { onderwerp as c5c } from './codes/5c.ts'
+import { onderwerp as c5d } from './codes/5d.ts'
+import { onderwerp as c5e } from './codes/5e.ts'
+import { onderwerp as c7d } from './codes/7d.ts'
+import { onderwerp as c7e } from './codes/7e.ts'
 import { onderwerp as c4a } from './codes/4a.ts'
 import { onderwerp as c4b } from './codes/4b.ts'
 import { onderwerp as c4c } from './codes/4c.ts'
@@ -58,6 +75,10 @@ const AANWEZIG: Onderwerp[] = [
   c1c, c5a, c5b, c4a, c4b, c4c, c4d, c4e,
   c3a, c3b, c3c, c3d, c3e,
   c1d, c1e, c7a,
+  c2a, c2b,
+  c2c, c2d, c2e,
+  c6a, c6b, c6c, c6d, c6e,
+  c7b, c7c, c5c, c5d, c5e, c7d, c7e,
 ]
 
 /**

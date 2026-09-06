@@ -5,7 +5,7 @@
 
 import type { Opgave, Soort, Vormeis } from '../stof/types.ts'
 import { ggd } from '../stof/getal.ts'
-import { normaliseer, ontleed, reken, zelfdeWaarde } from './rekenaar.ts'
+import { letters, normaliseer, ontleed, reken, zelfdeWaarde } from './rekenaar.ts'
 
 export type Oordeel =
   | { goed: true }
@@ -151,11 +151,74 @@ function buitenDeHaakjes(ingevuld: string): string | null {
   return delen.length === 0 ? '1' : delen.join('·')
 }
 
+/** Splitst op de plussen en minnen die niet binnen haakjes staan. */
+function losseTermen(deel: string): string[] {
+  const uit: string[] = []
+  let diepte = 0
+  let begin = 0
+  for (let i = 0; i < deel.length; i++) {
+    const c = deel[i]
+    if (c === '(') diepte++
+    else if (c === ')') diepte--
+    else if ((c === '+' || c === '-') && diepte === 0 && i > 0) {
+      const vorige = deel[i - 1]
+      if (vorige !== '^' && vorige !== '(' && vorige !== '·' && vorige !== '/' && vorige !== '÷') {
+        uit.push(deel.slice(begin, i))
+        begin = i + 1
+      }
+    }
+  }
+  uit.push(deel.slice(begin))
+  return uit.filter((t) => t.length > 0)
+}
+
+/** Welke letters zitten in élke term van dit stuk? Alleen die kun je wegstrepen. */
+function overalAanwezig(deel: string): Set<string> {
+  const kaal = deel.replace(/^\((.*)\)$/, '$1')
+  const termen = losseTermen(kaal)
+  let gedeeld: Set<string> | null = null
+  for (const t of termen) {
+    const boom = ontleed(t)
+    const hier: Set<string> = boom ? letters(boom) : new Set<string>()
+    if (gedeeld === null) {
+      gedeeld = hier
+    } else {
+      const vorige: string[] = [...gedeeld]
+      gedeeld = new Set<string>(vorige.filter((l) => hier.has(l)))
+    }
+  }
+  return gedeeld ?? new Set<string>()
+}
+
+/**
+ * Staat er boven én onder de streep een letter die in álle termen zit? Dan kan
+ * er nog weggestreept worden -- precies de regel uit de reader: wat je bij het
+ * ene element wegstreept, moet je bij alle elementen weg kunnen strepen.
+ */
+function nogWegTeStrepen(ingevuld: string): boolean {
+  const s = normaliseer(ingevuld)
+  let diepte = 0
+  let streep = -1
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '(') diepte++
+    else if (s[i] === ')') diepte--
+    else if ((s[i] === '/' || s[i] === '÷') && diepte === 0) {
+      streep = i
+      break
+    }
+  }
+  if (streep === -1) return false
+
+  const boven = overalAanwezig(s.slice(0, streep))
+  const onder = overalAanwezig(s.slice(streep + 1))
+  return [...boven].some((l) => onder.has(l))
+}
+
 function vormFout(ingevuld: string, eis: Vormeis | undefined): string | null {
   if (!eis) return null
   const s = normaliseer(ingevuld)
 
-  if (eis.geenBreuk && s.includes('/')) {
+  if (eis.geenBreuk && (s.includes('/') || s.includes('÷'))) {
     return 'De waarde klopt, maar er mag geen breuk in staan. Gebruik een negatieve macht: 1/a³ is a⁻³.'
   }
   if (eis.geenHaakjes && s.includes('(')) {
@@ -163,6 +226,9 @@ function vormFout(ingevuld: string, eis: Vormeis | undefined): string | null {
   }
   if (eis.geenMaal && s.includes('·')) {
     return 'De waarde klopt, maar het maalteken moet uitgerekend zijn.'
+  }
+  if (eis.geenDeelteken && s.includes('÷')) {
+    return 'De waarde klopt, maar de deling moet uitgewerkt zijn tot één breuk.'
   }
   if (eis.alleenGetal) {
     const heel = /^-?\d+(\.\d+)?$/.test(s)
@@ -182,6 +248,21 @@ function vormFout(ingevuld: string, eis: Vormeis | undefined): string | null {
   }
   if (eis.maxTermen !== undefined && aantalTermen(s) > eis.maxTermen) {
     return 'De waarde klopt, maar het kan nog korter: er staan termen tussen die je bij elkaar kunt nemen.'
+  }
+  if (eis.geenGedeeldeLetter && nogWegTeStrepen(ingevuld)) {
+    return 'Er staat boven én onder de streep nog een letter die je kunt wegstrepen.'
+  }
+  if (eis.hoogstensTekens !== undefined && s.length > eis.hoogstensTekens) {
+    return 'De waarde klopt, maar het kan nog korter: vereenvoudig verder.'
+  }
+  if (eis.gemengd && /^-?\d+\/\d+$/.test(s)) {
+    const [teller, noemer] = s.replace('-', '').split('/').map(Number)
+    if (teller >= noemer) {
+      return 'De waarde klopt, maar haal de hele eruit: schrijf het als gemengd getal.'
+    }
+  }
+  if (eis.alsBreuk && !/^-?\d+\/\d+$/.test(s)) {
+    return 'Schrijf het als één breuk, dus als teller/noemer.'
   }
   if (eis.factor !== undefined) {
     const buiten = buitenDeHaakjes(ingevuld)
