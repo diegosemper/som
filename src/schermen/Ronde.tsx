@@ -6,9 +6,11 @@ import Toetsenbord from '../ui/Toetsenbord.tsx'
 
 type Props = {
   onderwerp: Onderwerp
+  /** Onderwerpen uit de foutenbak die tussendoor terugkomen. */
+  herhaling: Onderwerp[]
   opTerug: () => void
   opKlaar: (gewonnen: boolean, fouten: number) => void
-  opMisser: () => void
+  opMisser: (code: string) => void
 }
 
 /** De letters die in deze vraag voorkomen; die zet het toetsenbord klaar. */
@@ -20,8 +22,8 @@ function lettersUit(tekst: string): string[] {
   return [...gevonden].sort().slice(0, 6)
 }
 
-export default function Ronde({ onderwerp, opTerug, opKlaar, opMisser }: Props) {
-  const [stand, setStand] = useState<Rondestand>(() => startRonde(onderwerp))
+export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser }: Props) {
+  const [stand, setStand] = useState<Rondestand>(() => startRonde(onderwerp, Date.now(), herhaling))
   const [invoer, setInvoer] = useState('')
   const [melding, setMelding] = useState<string | null>(null)
   const [oordeel, setOordeel] = useState<Oordeel | null>(null)
@@ -66,7 +68,7 @@ export default function Ronde({ onderwerp, opTerug, opKlaar, opMisser }: Props) 
       setMelding('Dat kan ik niet lezen. Gebruik · voor keer, / voor delen en ^ voor een macht.')
       return
     }
-    opMisser()
+    opMisser(opgave.code)
     setOordeel(uitslag)
   }
 
@@ -95,7 +97,10 @@ export default function Ronde({ onderwerp, opTerug, opKlaar, opMisser }: Props) 
       </div>
 
       <div className="vraagvak">
-        <div className="opdracht">{opgave.opdracht}</div>
+        <div className="opdracht">
+          {opgave.code !== onderwerp.code && <span className="codetag herhaal">herhaling {opgave.code}</span>}{' '}
+          {opgave.opdracht}
+        </div>
         <div
           className={
             opgave.vraag.length > 40 ? 'vraag verhaal' : opgave.vraag.length > 22 ? 'vraag lang' : 'vraag'

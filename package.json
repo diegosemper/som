@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "telefoon": "vite --host",
-    "controleer": "node scripts/controleer.mjs && node scripts/rooktest.mjs",
+    "controleer": "node scripts/controleer.mjs && node scripts/rooktest.mjs && node scripts/rendertest.mjs",
     "icoon": "node scripts/icoon.mjs",
     "build": "tsc --noEmit && npm run controleer && vite build",
     "preview": "vite preview"

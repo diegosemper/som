@@ -299,6 +299,22 @@ button {
   margin-top: 8px;
 }
 
+.codetag {
+  display: inline-block;
+  background: #232a3a;
+  color: var(--zacht);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.codetag.herhaal {
+  background: var(--accent-diep);
+  color: #ffeacc;
+}
+
 /* ---------------- meerkeuze ---------------- */
 
 .keuzes {
@@ -519,7 +535,7 @@ button {
   gap: 6px;
 }
 
-.slot .groot-cijfer {
+.groot-cijfer {
   font-size: 64px;
   line-height: 1;
   margin-bottom: 6px;

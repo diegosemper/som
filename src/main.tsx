@@ -8,3 +8,13 @@ createRoot(document.getElementById('wortel')!).render(
     <App />
   </StrictMode>,
 )
+
+// Offline kunnen oefenen. Alleen in de gebouwde app: in dev zou de cache
+// alleen maar in de weg zitten.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      // Geen offline-modus dan; de app werkt verder gewoon.
+    })
+  })
+}

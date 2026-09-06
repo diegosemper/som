@@ -8,8 +8,27 @@
 import { ONDERWERPEN } from '../src/stof/index.ts'
 import { afloop, goed, huidige, mis, startRonde } from '../src/engine/ronde.ts'
 import { kijkNa } from '../src/engine/antwoord.ts'
+import { maakToets, TOETS_LENGTE } from '../src/engine/toets.ts'
 
 const klachten = []
+
+// De proeftoets moet twintig sommen leveren die allemaal nagekeken kunnen worden.
+for (const zaad of [1, 2, 3]) {
+  const toets = maakToets(ONDERWERPEN, { '4c': 3, '7d': 1 }, zaad)
+  if (toets.length !== TOETS_LENGTE) {
+    klachten.push(`proeftoets ${zaad}: ${toets.length} sommen in plaats van ${TOETS_LENGTE}`)
+  }
+  for (const opgave of toets) {
+    if (!kijkNa(opgave.antwoord, opgave).goed) {
+      klachten.push(`proeftoets ${zaad}: "${opgave.vraag}" keurt het eigen antwoord af`)
+    }
+  }
+  for (let i = 1; i < toets.length; i++) {
+    if (toets[i].code === toets[i - 1].code) {
+      klachten.push(`proeftoets ${zaad}: twee keer ${toets[i].code} achter elkaar`)
+    }
+  }
+}
 
 for (const onderwerp of ONDERWERPEN) {
   // 1. Alles goed beantwoorden: ronde gewonnen, nul fouten.

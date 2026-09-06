@@ -22,8 +22,18 @@ export type Rondestand = {
 
 export type Afloop = 'bezig' | 'gewonnen' | 'verloren'
 
-/** Acht sommen, zo veel mogelijk verschillend van elkaar. */
-export function startRonde(onderwerp: Onderwerp, zaad: number = Date.now()): Rondestand {
+/**
+ * Acht sommen, zo veel mogelijk verschillend van elkaar.
+ *
+ * `herhaling` zijn onderwerpen uit de foutenbak: daar komt er één van tussen,
+ * halverwege de ronde. Zo blijf je herhalen wat je niet kunt in plaats van wat
+ * je al kunt.
+ */
+export function startRonde(
+  onderwerp: Onderwerp,
+  zaad: number = Date.now(),
+  herhaling: Onderwerp[] = [],
+): Rondestand {
   const rng = maakRng(zaad)
   const wachtrij: Opgave[] = []
   const gezien = new Set<string>()
@@ -36,6 +46,12 @@ export function startRonde(onderwerp: Onderwerp, zaad: number = Date.now()): Ron
     gezien.add(opgave.vraag)
     wachtrij.push(opgave)
   }
+
+  // Nooit de eerste of de laatste: je begint en eindigt met het onderwerp zelf.
+  const plekken = [3, 6]
+  herhaling.slice(0, plekken.length).forEach((ander, i) => {
+    wachtrij[plekken[i]] = ander.maak(rng)
+  })
 
   return {
     code: onderwerp.code,

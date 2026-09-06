@@ -7,9 +7,10 @@ import Sterren from '../ui/Sterren.tsx'
 type Props = {
   voortgang: Voortgang
   opKies: (onderwerp: Onderwerp) => void
+  opProeftoets: () => void
 }
 
-export default function Pad({ voortgang, opKies }: Props) {
+export default function Pad({ voortgang, opKies, opProeftoets }: Props) {
   const groepen = hoofdstukken()
   const nu = volgendeStap(ONDERWERPEN, voortgang)
   const totaal = totaalSterren(ONDERWERPEN, voortgang)
@@ -54,6 +55,10 @@ export default function Pad({ voortgang, opKies }: Props) {
           })}
         </div>
       ))}
+
+      <button className="groot rustig" style={{ marginTop: 18 }} onClick={opProeftoets}>
+        📝 Proeftoets — 20 sommen, geen hartjes
+      </button>
 
       <div className="voet">
         Stof: Startvaardigheden Wiskunde HBO-ICT · codes zoals in de oefentool
