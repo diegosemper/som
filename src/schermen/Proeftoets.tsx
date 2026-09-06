@@ -3,20 +3,13 @@ import type { Onderwerp, Opgave } from '../stof/types.ts'
 import { kijkNa } from '../engine/antwoord.ts'
 import { cijfer, maakToets, type Gegeven } from '../engine/toets.ts'
 import Toetsenbord from '../ui/Toetsenbord.tsx'
+import { nodigeLetters } from '../ui/toetsen.ts'
 
 type Props = {
   onderwerpen: Onderwerp[]
   foutenbak: Record<string, number>
   opTerug: () => void
   opKlaar: (gegevens: Gegeven[]) => void
-}
-
-function lettersUit(tekst: string): string[] {
-  const gevonden = new Set<string>()
-  for (const teken of tekst.toLowerCase()) {
-    if (teken >= 'a' && teken <= 'z') gevonden.add(teken)
-  }
-  return [...gevonden].sort().slice(0, 6)
 }
 
 export default function Proeftoets({ onderwerpen, foutenbak, opTerug, opKlaar }: Props) {
@@ -28,10 +21,7 @@ export default function Proeftoets({ onderwerpen, foutenbak, opTerug, opKlaar }:
   const [melding, setMelding] = useState<string | null>(null)
 
   const opgave: Opgave | undefined = opgaven[nummer]
-  const letters = useMemo(
-    () => (opgave ? lettersUit(opgave.vraag + ' ' + opgave.opdracht) : []),
-    [opgave],
-  )
+  const letters = useMemo(() => (opgave ? nodigeLetters(opgave) : []), [opgave])
 
   if (!opgave) return null
 

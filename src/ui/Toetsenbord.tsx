@@ -1,8 +1,13 @@
 /**
  * Eigen toetsenbord. Op een telefoon staat het systeemtoetsenbord altijd in de
- * weg en heeft het geen ^, √ of ·. Dit bord toont alleen de letters die in de
- * vraag voorkomen, dus je hoeft nooit te zoeken.
+ * weg en heeft het geen ^, √ of ·.
+ *
+ * Bovenaan staan de letters die je voor dít antwoord nodig hebt, zodat je niet
+ * hoeft te zoeken. Met de abc-knop klapt het hele alfabet uit — want de app mag
+ * je nooit tegenhouden omdat een letter toevallig niet in het lijstje stond.
  */
+
+import { useState } from 'react'
 
 type Props = {
   letters: string[]
@@ -11,7 +16,11 @@ type Props = {
   zet: (nieuw: string) => void
 }
 
+const ALFABET = 'abcdefghijklmnopqrstuvwxyz'.split('')
+
 export default function Toetsenbord({ letters, extra, waarde, zet }: Props) {
+  const [alfabetOpen, setAlfabetOpen] = useState(false)
+
   const tik = (teken: string) => zet(waarde + teken)
   const wis = () => zet(waarde.slice(0, -1))
 
@@ -24,20 +33,36 @@ export default function Toetsenbord({ letters, extra, waarde, zet }: Props) {
 
   return (
     <div className="toetsen">
-      {(letters.length > 0 || extra.length > 0) && (
-        <div className="rij">
-          {letters.map((l) => (
-            <button key={l} className="toets zacht" onClick={() => tik(l)}>
+      <div className="rij">
+        {letters.map((l) => (
+          <button key={l} className="toets zacht" onClick={() => tik(l)}>
+            {l}
+          </button>
+        ))}
+        {extra.map((e) => (
+          <button key={e} className="toets zacht" onClick={() => tik(e)}>
+            {e}
+          </button>
+        ))}
+        <button
+          className={'toets abc' + (alfabetOpen ? ' aan' : '')}
+          onClick={() => setAlfabetOpen(!alfabetOpen)}
+          aria-label="alle letters"
+        >
+          abc
+        </button>
+      </div>
+
+      {alfabetOpen && (
+        <div className="alfabet">
+          {ALFABET.map((l) => (
+            <button key={l} className="toets" onClick={() => tik(l)}>
               {l}
-            </button>
-          ))}
-          {extra.map((e) => (
-            <button key={e} className="toets zacht" onClick={() => tik(e)}>
-              {e}
             </button>
           ))}
         </div>
       )}
+
       {rijen.map((rij, i) => (
         <div className="rij" key={i}>
           {rij.map((teken) =>

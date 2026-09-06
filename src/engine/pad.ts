@@ -1,22 +1,21 @@
 /**
- * Welk onderwerp is open? Het pad loopt vast van hoofdstuk 1 naar 8. Een
- * onderwerp gaat open zodra het vorige minstens één ster heeft.
+ * Het pad loopt van hoofdstuk 1 naar 8, maar niets zit op slot.
+ *
+ * Eerder ging een onderwerp pas open als het vorige een ster had. Dat werkt
+ * averechts als je een dag voor de toets juist dát ene hoofdstuk wilt oefenen
+ * waar je op vastloopt. De volgorde is een advies, geen hek.
  */
 
 import type { Onderwerp } from '../stof/types.ts'
 import type { Voortgang } from '../opslag/voortgang.ts'
 
-export function isOpen(onderwerpen: Onderwerp[], code: string, v: Voortgang): boolean {
-  const i = onderwerpen.findIndex((o) => o.code === code)
-  if (i <= 0) return true
-  const vorige = onderwerpen[i - 1]
-  return (v.sterren[vorige.code] ?? 0) >= 1
+export function isOpen(_onderwerpen: Onderwerp[], _code: string, _v: Voortgang): boolean {
+  return true
 }
 
 /** Het eerste onderwerp dat nog geen drie sterren heeft: daar ga je verder. */
 export function volgendeStap(onderwerpen: Onderwerp[], v: Voortgang): Onderwerp | undefined {
   for (const o of onderwerpen) {
-    if (!isOpen(onderwerpen, o.code, v)) return undefined
     if ((v.sterren[o.code] ?? 0) < 3) return o
   }
   return undefined

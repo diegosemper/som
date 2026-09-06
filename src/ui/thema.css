@@ -593,6 +593,33 @@ button {
   color: var(--fout);
 }
 
+.toets.abc {
+  /* Altijd rechts, ook als er geen letters klaarliggen: dan blijft de knop op
+     dezelfde plek staan en hoef je hem niet te zoeken. */
+  flex: 0 0 56px;
+  margin-left: auto;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--zacht);
+}
+
+.toets.abc.aan {
+  background: var(--accent-diep);
+  color: #ffeacc;
+  border-color: var(--accent);
+}
+
+.alfabet {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 5px;
+}
+
+.alfabet .toets {
+  padding: 10px 0;
+  font-size: 17px;
+}
+
 .groot {
   width: 100%;
   background: var(--accent);

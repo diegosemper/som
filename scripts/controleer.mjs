@@ -17,6 +17,7 @@ import { READEROPGAVEN } from '../src/stof/reader.ts'
 import { kijkNa, zelfdeAntwoord } from '../src/engine/antwoord.ts'
 import { normaliseer } from '../src/engine/rekenaar.ts'
 import { maakRng } from '../src/stof/rng.ts'
+import { lettersIn, nodigeLetters, TYPEBAAR } from '../src/ui/toetsen.ts'
 
 const PER_ONDERWERP = 200
 
@@ -78,6 +79,21 @@ for (const onderwerp of ONDERWERPEN) {
     }
 
     if (!opgave.tip) meld(waar, 'geen tip')
+
+    // Kun je dit antwoord überhaupt intikken op het eigen toetsenbord?
+    if (opgave.invoer === 'typen' && (opgave.soort === 'getal' || opgave.soort === 'uitdrukking')) {
+      const klaarliggend = new Set(nodigeLetters(opgave))
+      for (const letter of lettersIn(opgave.antwoord)) {
+        if (!klaarliggend.has(letter)) {
+          meld(waar, `de letter "${letter}" ligt niet klaar op het toetsenbord`)
+        }
+      }
+      for (const teken of normaliseer(opgave.antwoord)) {
+        if (!TYPEBAAR.has(teken)) {
+          meld(waar, `het teken "${teken}" in "${opgave.antwoord}" is niet te typen`)
+        }
+      }
+    }
   }
 }
 

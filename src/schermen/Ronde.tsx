@@ -5,6 +5,7 @@ import { kijkNa, type Oordeel } from '../engine/antwoord.ts'
 import { receptVoor } from '../stof/gasten.ts'
 import { juich, troost } from '../ui/praat.ts'
 import Toetsenbord from '../ui/Toetsenbord.tsx'
+import { nodigeLetters } from '../ui/toetsen.ts'
 
 type Props = {
   onderwerp: Onderwerp
@@ -13,15 +14,6 @@ type Props = {
   opTerug: () => void
   opKlaar: (gewonnen: boolean, fouten: number) => void
   opMisser: (code: string) => void
-}
-
-/** De letters die in deze vraag voorkomen; die zet het toetsenbord klaar. */
-function lettersUit(tekst: string): string[] {
-  const gevonden = new Set<string>()
-  for (const teken of tekst.toLowerCase()) {
-    if (teken >= 'a' && teken <= 'z') gevonden.add(teken)
-  }
-  return [...gevonden].sort().slice(0, 6)
 }
 
 export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser }: Props) {
@@ -46,10 +38,7 @@ export default function Ronde({ onderwerp, herhaling, opTerug, opKlaar, opMisser
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
 
-  const letters = useMemo(
-    () => (opgave ? lettersUit(opgave.vraag + ' ' + opgave.opdracht) : []),
-    [opgave],
-  )
+  const letters = useMemo(() => (opgave ? nodigeLetters(opgave) : []), [opgave])
 
   if (!opgave || status !== 'bezig') return null
 

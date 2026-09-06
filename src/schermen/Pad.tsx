@@ -1,7 +1,7 @@
 import type { Onderwerp } from '../stof/types.ts'
 import type { Voortgang } from '../opslag/voortgang.ts'
 import { hoofdstukken, ONDERWERPEN } from '../stof/index.ts'
-import { isOpen, totaalSterren, volgendeStap } from '../engine/pad.ts'
+import { totaalSterren, volgendeStap } from '../engine/pad.ts'
 import { rangVoor } from '../ui/praat.ts'
 import Sterren from '../ui/Sterren.tsx'
 
@@ -39,19 +39,13 @@ export default function Pad({ voortgang, opKies, opProeftoets }: Props) {
             Hoofdstuk {groep.nummer} — {groep.naam}
           </div>
           {groep.onderwerpen.map((o) => {
-            const open = isOpen(ONDERWERPEN, o.code, voortgang)
             const sterren = voortgang.sterren[o.code] ?? 0
-            const klassen = [
-              'tegel',
-              open ? '' : 'dicht',
-              sterren > 0 ? 'af' : '',
-              nu?.code === o.code ? 'nu' : '',
-            ]
+            const klassen = ['tegel', sterren > 0 ? 'af' : '', nu?.code === o.code ? 'nu' : '']
               .filter(Boolean)
               .join(' ')
             return (
-              <button key={o.code} className={klassen} disabled={!open} onClick={() => opKies(o)}>
-                <span className="code">{open ? o.code : '🔒'}</span>
+              <button key={o.code} className={klassen} onClick={() => opKies(o)}>
+                <span className="code">{o.code}</span>
                 <span>
                   <div className="titel">{o.titel}</div>
                   <div className="onder">{o.waarover}</div>
