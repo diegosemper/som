@@ -1,0 +1,522 @@
+/* SOM — mobiel eerst. Donker, grote knoppen, weinig afleiding. */
+
+:root {
+  --achter: #10131b;
+  --kaart: #1a1f2c;
+  --kaart-rand: #262d3d;
+  --tekst: #e8ecf5;
+  --zacht: #98a2b8;
+  --accent: #ffb020;
+  --accent-diep: #b87400;
+  --goed: #3ddc84;
+  --goed-diep: #1a7f4b;
+  --fout: #ff5d5d;
+  --fout-diep: #a32020;
+  --blauw: #5b9dff;
+  --rand: 14px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--achter);
+  color: var(--tekst);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+#wortel {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.scherm {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 10px);
+}
+
+/* ---------------- kop ---------------- */
+
+.kop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0 10px;
+}
+
+.kop h1 {
+  font-size: 22px;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.kop .rek {
+  flex: 1;
+}
+
+.pil {
+  background: var(--kaart);
+  border: 1px solid var(--kaart-rand);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pil.vuur {
+  color: var(--accent);
+}
+
+.terug {
+  font-size: 15px;
+  color: var(--zacht);
+  padding: 10px 4px 10px 0;
+}
+
+/* ---------------- pad ---------------- */
+
+.hoofdstuk {
+  margin: 18px 0 8px;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--zacht);
+}
+
+.tegel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: var(--kaart);
+  border: 1px solid var(--kaart-rand);
+  border-radius: var(--rand);
+  padding: 14px;
+  margin-bottom: 10px;
+  transition: transform 0.08s ease;
+}
+
+.tegel:active {
+  transform: scale(0.985);
+}
+
+.tegel.dicht {
+  opacity: 0.45;
+}
+
+.tegel.nu {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-diep) inset;
+}
+
+.tegel .code {
+  flex: 0 0 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #232a3a;
+  color: var(--zacht);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.tegel.af .code {
+  background: var(--goed-diep);
+  color: #eafff3;
+}
+
+.tegel .titel {
+  font-weight: 650;
+  font-size: 17px;
+}
+
+.tegel .onder {
+  color: var(--zacht);
+  font-size: 13px;
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+.sterren {
+  letter-spacing: 1px;
+  font-size: 14px;
+  color: var(--accent);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.sterren .leeg {
+  color: #3a4256;
+}
+
+/* ---------------- uitleg ---------------- */
+
+.uitlegkaart {
+  background: var(--kaart);
+  border: 1px solid var(--kaart-rand);
+  border-radius: var(--rand);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.uitlegkaart h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.uitlegkaart p {
+  margin: 0;
+  color: #cdd5e6;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+.voorbeeld {
+  margin-top: 12px;
+  background: #10141e;
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 17px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* ---------------- ronde ---------------- */
+
+.balkje {
+  height: 10px;
+  background: #232a3a;
+  border-radius: 999px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.balkje > div {
+  height: 100%;
+  background: var(--goed);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.hartjes {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.vraagvak {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 0;
+  min-height: 130px;
+}
+
+.opdracht {
+  color: var(--zacht);
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.vraag {
+  font-size: 34px;
+  line-height: 1.3;
+  font-weight: 600;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 6px;
+}
+
+.vraag.lang {
+  font-size: 26px;
+}
+
+.antwoordvak {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--kaart);
+  border: 2px solid var(--kaart-rand);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 26px;
+  min-height: 58px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.antwoordvak.leeg {
+  color: #4d566d;
+}
+
+.antwoordvak.mis {
+  border-color: var(--fout);
+}
+
+.melding {
+  color: var(--accent);
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: 8px;
+}
+
+/* ---------------- toetsenbord ---------------- */
+
+.toetsen {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rij {
+  display: flex;
+  gap: 6px;
+}
+
+.toets {
+  flex: 1;
+  background: var(--kaart);
+  border: 1px solid var(--kaart-rand);
+  border-radius: 10px;
+  padding: 13px 0;
+  font-size: 19px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 0;
+}
+
+.toets:active {
+  background: #2a3244;
+}
+
+.toets.zacht {
+  color: var(--accent);
+}
+
+.toets.wis {
+  color: var(--fout);
+}
+
+.groot {
+  width: 100%;
+  background: var(--accent);
+  color: #241700;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 750;
+  margin-top: 10px;
+}
+
+.groot:active {
+  background: var(--accent-diep);
+}
+
+.groot.uit {
+  background: #2a3244;
+  color: #5b6479;
+}
+
+.groot.groen {
+  background: var(--goed);
+  color: #052b16;
+}
+
+.groot.rustig {
+  background: var(--kaart);
+  border: 1px solid var(--kaart-rand);
+  color: var(--tekst);
+}
+
+/* ---------------- uitwerking ---------------- */
+
+.blad {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #141926;
+  border-top: 2px solid var(--fout-diep);
+  border-radius: 18px 18px 0 0;
+  padding: 16px 14px calc(env(safe-area-inset-bottom) + 16px);
+  max-height: 85dvh;
+  overflow-y: auto;
+  animation: omhoog 0.18s ease-out;
+  z-index: 10;
+}
+
+.blad.goed {
+  border-top-color: var(--goed-diep);
+}
+
+@keyframes omhoog {
+  from {
+    transform: translateY(30px);
+    opacity: 0.4;
+  }
+}
+
+.blad .binnen {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.bladkop {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.bladkop.mis {
+  color: var(--fout);
+}
+
+.bladkop.oke {
+  color: var(--goed);
+}
+
+.valkuil {
+  background: #21182a;
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin: 10px 0;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.juist {
+  font-size: 22px;
+  margin: 8px 0 14px;
+}
+
+.juist span {
+  color: var(--goed);
+  font-weight: 700;
+}
+
+.stap {
+  display: flex;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid #222a3a;
+}
+
+.stap .nr {
+  flex: 0 0 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #232a3a;
+  color: var(--zacht);
+  font-size: 13px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.stap .doe {
+  color: var(--zacht);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.stap .werd {
+  font-size: 19px;
+  margin-top: 3px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.stap .waarom {
+  color: #7d879c;
+  font-size: 13px;
+  margin-top: 3px;
+  font-style: italic;
+}
+
+.tip {
+  color: var(--zacht);
+  font-size: 14px;
+  line-height: 1.45;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #222a3a;
+}
+
+/* ---------------- slot ---------------- */
+
+.slot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.slot .groot-cijfer {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.slot h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.slot p {
+  color: var(--zacht);
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+.slotsterren {
+  font-size: 40px;
+  letter-spacing: 6px;
+  color: var(--accent);
+  margin: 14px 0 4px;
+}
+
+.slotsterren .leeg {
+  color: #333b4d;
+}
+
+.voet {
+  color: #5a6379;
+  font-size: 12px;
+  text-align: center;
+  padding: 14px 0 4px;
+}

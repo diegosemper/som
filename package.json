@@ -1,0 +1,26 @@
+{
+  "name": "som",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "SOM - oefenspel Startvaardigheden Wiskunde HBO-ICT",
+  "scripts": {
+    "dev": "vite",
+    "telefoon": "vite --host",
+    "controleer": "node scripts/controleer.mjs && node scripts/rooktest.mjs",
+    "icoon": "node scripts/icoon.mjs",
+    "build": "tsc --noEmit && npm run controleer && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}

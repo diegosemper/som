@@ -1,0 +1,17 @@
+{
+  "name": "SOM — wiskunde oefenen",
+  "short_name": "SOM",
+  "description": "Oefenspel voor Startvaardigheden Wiskunde HBO-ICT",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#10131b",
+  "theme_color": "#10131b",
+  "lang": "nl",
+  "icons": [
+    { "src": "./icoon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icoon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icoon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
