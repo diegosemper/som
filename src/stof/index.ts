@@ -18,7 +18,10 @@ import { onderwerp as c1e } from './codes/1e.ts'
 import { onderwerp as c4a } from './codes/4a.ts'
 import { onderwerp as c4b } from './codes/4b.ts'
 import { onderwerp as c4c } from './codes/4c.ts'
+import { onderwerp as c4d } from './codes/4d.ts'
+import { onderwerp as c4e } from './codes/4e.ts'
 import { onderwerp as c5a } from './codes/5a.ts'
+import { onderwerp as c5b } from './codes/5b.ts'
 
 /**
  * Zo hoort het pad te lopen. Codes die er nog niet zijn worden overgeslagen,
@@ -44,7 +47,7 @@ const PAD = [
   '7b', '7c', '5c', '5d', '5e', '7d', '7e',
 ]
 
-const AANWEZIG: Onderwerp[] = [c1a, c1b, c1c, c5a, c4a, c4b, c4c, c1d, c1e]
+const AANWEZIG: Onderwerp[] = [c1a, c1b, c1c, c5a, c5b, c4a, c4b, c4c, c4d, c4e, c1d, c1e]
 
 /**
  * Een valkuil die toevallig hetzelfde uitkomt als het goede antwoord zou de

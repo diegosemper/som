@@ -83,6 +83,17 @@ export function maal(a: Term, b: Term): Term {
   return { coef: a.coef * b.coef, machten }
 }
 
+/**
+ * Plakt een getal en een letterdeel aan elkaar. Is de macht 0 geworden, dan
+ * levert `macht()` de tekst "1" en die willen we niet achter het getal zien
+ * staan: 32 · u⁰ is 32, niet 321.
+ */
+export function plak(getal: string, letterdeel: string): string {
+  if (letterdeel === '1') return getal
+  if (getal === '1') return letterdeel
+  return getal + letterdeel
+}
+
 /** Getal met een minteken dat je vóór een haakje kunt zetten: −3 wordt "−3". */
 export function toonGetal(n: number): string {
   return n < 0 ? '−' + Math.abs(n) : String(n)
