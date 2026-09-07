@@ -3,8 +3,9 @@
  * hartjes. Onderwerpen waar je eerder op struikelde komen vaker voorbij.
  */
 
-import type { Onderwerp, Opgave } from '../stof/types.ts'
+import type { Onderwerp, Opgave, Rondesoort } from '../stof/types.ts'
 import { maakRng } from '../stof/rng.ts'
+import { alsMeerkeuze } from './meerkeuze.ts'
 
 export const TOETS_LENGTE = 20
 
@@ -21,6 +22,7 @@ export type Gegeven = {
 export function maakToets(
   onderwerpen: Onderwerp[],
   foutenbak: Record<string, number>,
+  soort: Rondesoort = 'open',
   zaad: number = Date.now(),
 ): Opgave[] {
   const rng = maakRng(zaad)
@@ -45,7 +47,15 @@ export function maakToets(
     gekozen.push(kandidaat)
   }
 
-  return gekozen.map((o) => o.maak(rng))
+  return gekozen.map((o) => {
+    const opgave = o.maak(rng)
+    if (soort !== 'meerkeuze') return opgave
+
+    // Reservekeuzes uit hetzelfde onderwerp: een breuk als tegenspeler van een
+    // coördinaat zou meteen verraden welke knop de goede is.
+    const reserve = [o.maak(rng).antwoord, o.maak(rng).antwoord, o.maak(rng).antwoord]
+    return alsMeerkeuze(opgave, rng, reserve)
+  })
 }
 
 export function cijfer(gegevens: Gegeven[]): string {

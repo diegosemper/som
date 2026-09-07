@@ -1,4 +1,4 @@
-import type { Onderwerp } from '../stof/types.ts'
+import type { Onderwerp, Rondesoort } from '../stof/types.ts'
 import { sterrenVoor, type Voortgang } from '../opslag/voortgang.ts'
 import { hoofdstukken, ONDERWERPEN } from '../stof/index.ts'
 import { totaalSterren, volgendeStap } from '../engine/pad.ts'
@@ -8,7 +8,7 @@ import Sterren from '../ui/Sterren.tsx'
 type Props = {
   voortgang: Voortgang
   opKies: (onderwerp: Onderwerp) => void
-  opProeftoets: () => void
+  opProeftoets: (soort: Rondesoort) => void
 }
 
 export default function Pad({ voortgang, opKies, opProeftoets }: Props) {
@@ -57,8 +57,24 @@ export default function Pad({ voortgang, opKies, opProeftoets }: Props) {
         </div>
       ))}
 
-      <button className="groot rustig" style={{ marginTop: 18 }} onClick={opProeftoets}>
-        📝 Proeftoets — 20 sommen, geen hartjes
+      <div className="hoofdstuk" style={{ marginTop: 22 }}>
+        Proeftoets — 20 sommen, geen hartjes
+      </div>
+
+      <button className="keuzekaart" onClick={() => opProeftoets('meerkeuze')}>
+        <span className="keuzeicoon">🔘</span>
+        <span className="keuzetekst">
+          <b>Meerkeuze</b>
+          <span>alle hoofdstukken door elkaar, met knoppen</span>
+        </span>
+      </button>
+
+      <button className="keuzekaart" onClick={() => opProeftoets('open')}>
+        <span className="keuzeicoon">⌨️</span>
+        <span className="keuzetekst">
+          <b>Zelf invullen</b>
+          <span>zoals de echte toets — dit is de eerlijke test</span>
+        </span>
       </button>
 
       <div className="voet">

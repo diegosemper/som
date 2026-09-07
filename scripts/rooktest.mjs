@@ -55,20 +55,40 @@ for (const onderwerp of ONDERWERPEN) {
   }
 }
 
-// De proeftoets moet twintig sommen leveren die allemaal nagekeken kunnen worden.
-for (const zaad of [1, 2, 3]) {
-  const toets = maakToets(ONDERWERPEN, { '4c': 3, '7d': 1 }, zaad)
-  if (toets.length !== TOETS_LENGTE) {
-    klachten.push(`proeftoets ${zaad}: ${toets.length} sommen in plaats van ${TOETS_LENGTE}`)
-  }
-  for (const opgave of toets) {
-    if (!kijkNa(opgave.antwoord, opgave).goed) {
-      klachten.push(`proeftoets ${zaad}: "${opgave.vraag}" keurt het eigen antwoord af`)
+// De proeftoets moet twintig sommen leveren die allemaal nagekeken kunnen
+// worden -- in allebei de vormen.
+for (const soort of ['meerkeuze', 'open']) {
+  for (const zaad of [1, 2, 3]) {
+    const waar = `proeftoets/${soort} ${zaad}`
+    const toets = maakToets(ONDERWERPEN, { '4c': 3, '7d': 1 }, soort, zaad)
+
+    if (toets.length !== TOETS_LENGTE) {
+      klachten.push(`${waar}: ${toets.length} sommen in plaats van ${TOETS_LENGTE}`)
     }
-  }
-  for (let i = 1; i < toets.length; i++) {
-    if (toets[i].code === toets[i - 1].code) {
-      klachten.push(`proeftoets ${zaad}: twee keer ${toets[i].code} achter elkaar`)
+    for (const opgave of toets) {
+      if (!kijkNa(opgave.antwoord, opgave).goed) {
+        klachten.push(`${waar}: "${opgave.vraag}" keurt het eigen antwoord af`)
+      }
+      if (soort === 'meerkeuze') {
+        if (opgave.invoer !== 'keuze') {
+          klachten.push(`${waar}: "${opgave.vraag}" heeft geen knoppen`)
+          continue
+        }
+        const keuzes = opgave.keuzes ?? []
+        if (!keuzes.includes(opgave.antwoord)) {
+          klachten.push(`${waar}: het goede antwoord staat niet tussen de keuzes`)
+        }
+        for (const keuze of keuzes) {
+          if (keuze !== opgave.antwoord && kijkNa(keuze, opgave).goed) {
+            klachten.push(`${waar}: "${keuze}" telt óók als goed`)
+          }
+        }
+      }
+    }
+    for (let i = 1; i < toets.length; i++) {
+      if (toets[i].code === toets[i - 1].code) {
+        klachten.push(`${waar}: twee keer ${toets[i].code} achter elkaar`)
+      }
     }
   }
 }

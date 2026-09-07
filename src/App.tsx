@@ -33,8 +33,8 @@ type Scherm =
       fouten: number
       sterren: number
     }
-  | { naam: 'proeftoets'; poging: number }
-  | { naam: 'nabespreking'; gegevens: Gegeven[] }
+  | { naam: 'proeftoets'; soort: Rondesoort; poging: number }
+  | { naam: 'nabespreking'; soort: Rondesoort; gegevens: Gegeven[] }
 
 /** De twee onderwerpen waar tot nu toe het vaakst op misgegrepen is. */
 function herhalingVoor(code: string, voortgang: Voortgang): Onderwerp[] {
@@ -137,11 +137,13 @@ export default function App() {
 
   if (scherm.naam === 'proeftoets') {
     const beschikbaar = ONDERWERPEN.filter((o) => isOpen(ONDERWERPEN, o.code, voortgang))
+    const soort = scherm.soort
     return (
       <Proeftoets
-        key={scherm.poging}
+        key={`${soort}-${scherm.poging}`}
         onderwerpen={beschikbaar.length > 0 ? beschikbaar : ONDERWERPEN}
         foutenbak={voortgang.foutenbak}
+        soort={soort}
         opTerug={() => setScherm({ naam: 'pad' })}
         opKlaar={(gegevens) => {
           setVoortgang((v) => {
@@ -151,7 +153,7 @@ export default function App() {
             }
             return { ...v, foutenbak: bak, xp: v.xp + gegevens.filter((g) => g.goed).length }
           })
-          setScherm({ naam: 'nabespreking', gegevens })
+          setScherm({ naam: 'nabespreking', soort, gegevens })
         }}
       />
     )
@@ -161,8 +163,9 @@ export default function App() {
     return (
       <Nabespreking
         gegevens={scherm.gegevens}
+        soort={scherm.soort}
         opTerug={() => setScherm({ naam: 'pad' })}
-        opNogEen={() => setScherm({ naam: 'proeftoets', poging: Date.now() })}
+        opNogEen={(soort) => setScherm({ naam: 'proeftoets', soort, poging: Date.now() })}
       />
     )
   }
@@ -171,7 +174,7 @@ export default function App() {
     <Pad
       voortgang={voortgang}
       opKies={(onderwerp) => setScherm({ naam: 'onderwerp', code: onderwerp.code })}
-      opProeftoets={() => setScherm({ naam: 'proeftoets', poging: Date.now() })}
+      opProeftoets={(soort) => setScherm({ naam: 'proeftoets', soort, poging: Date.now() })}
     />
   )
 }

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import type { Onderwerp, Opgave } from '../stof/types.ts'
+import type { Onderwerp, Opgave, Rondesoort } from '../stof/types.ts'
 import { kijkNa } from '../engine/antwoord.ts'
 import { cijfer, maakToets, type Gegeven } from '../engine/toets.ts'
 import Toetsenbord from '../ui/Toetsenbord.tsx'
@@ -8,13 +8,14 @@ import { nodigeLetters } from '../ui/toetsen.ts'
 type Props = {
   onderwerpen: Onderwerp[]
   foutenbak: Record<string, number>
+  soort: Rondesoort
   opTerug: () => void
   opKlaar: (gegevens: Gegeven[]) => void
 }
 
-export default function Proeftoets({ onderwerpen, foutenbak, opTerug, opKlaar }: Props) {
+export default function Proeftoets({ onderwerpen, foutenbak, soort, opTerug, opKlaar }: Props) {
   // Eén keer trekken bij het openen: niet bij elke hertekening opnieuw.
-  const [opgaven] = useState(() => maakToets(onderwerpen, foutenbak))
+  const [opgaven] = useState(() => maakToets(onderwerpen, foutenbak, soort))
   const [nummer, setNummer] = useState(0)
   const [invoer, setInvoer] = useState('')
   const [gegevens, setGegevens] = useState<Gegeven[]>([])
@@ -115,15 +116,18 @@ export default function Proeftoets({ onderwerpen, foutenbak, opTerug, opKlaar }:
 /** Het nabesprekingsscherm: wat ging er mis, en waarom. */
 export function Nabespreking({
   gegevens,
+  soort,
   opTerug,
   opNogEen,
 }: {
   gegevens: Gegeven[]
+  soort: Rondesoort
   opTerug: () => void
-  opNogEen: () => void
+  opNogEen: (soort: Rondesoort) => void
 }) {
   const goed = gegevens.filter((g) => g.goed).length
   const fout = gegevens.filter((g) => !g.goed)
+  const andere: Rondesoort = soort === 'meerkeuze' ? 'open' : 'meerkeuze'
 
   return (
     <div className="scherm">
@@ -139,10 +143,16 @@ export function Nabespreking({
           {goed} van de {gegevens.length} goed
         </h2>
         <p style={{ color: 'var(--zacht)', marginTop: 6 }}>
+          {soort === 'meerkeuze' ? 'Meerkeuze' : 'Zelf invullen'} ·{' '}
           {fout.length === 0
-            ? 'Foutloos. Dit is precies de verdeling van de echte toets.'
-            : 'Hieronder staat elke fout met de uitwerking erbij.'}
+            ? 'foutloos, en dit is precies de verdeling van de echte toets'
+            : 'hieronder staat elke fout met de uitwerking erbij'}
         </p>
+        {soort === 'meerkeuze' && (
+          <p style={{ color: 'var(--zacht)', marginTop: 6, fontSize: 14 }}>
+            Let op: dinsdag krijg je geen knoppen. Doe hem ook een keer zelf invullen.
+          </p>
+        )}
       </div>
 
       {fout.map((g, i) => (
@@ -168,8 +178,11 @@ export function Nabespreking({
         </div>
       ))}
 
-      <button className="groot" onClick={opNogEen}>
+      <button className="groot" onClick={() => opNogEen(soort)}>
         Nog een proeftoets
+      </button>
+      <button className="groot rustig" onClick={() => opNogEen(andere)}>
+        {andere === 'open' ? '⌨️ Nu zelf invullen' : '🔘 Nu als meerkeuze'}
       </button>
       <button className="groot rustig" onClick={opTerug}>
         Terug naar het pad
