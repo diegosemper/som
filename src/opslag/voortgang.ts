@@ -5,7 +5,9 @@
 
 import type { Rondesoort } from '../stof/types.ts'
 
-const SLEUTEL = 'som-voortgang-1'
+// Op 19 oktober 2026 opnieuw begonnen; de oude voortgang staat nog onder
+// 'som-voortgang-1' en is terug te halen door de sleutel terug te zetten.
+const SLEUTEL = 'som-voortgang-2'
 
 export type Voortgang = {
   /** Aantal sterren, 0 t/m 3, per onderwerp én rondesoort ("1a:open"). */
