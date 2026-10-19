@@ -36,14 +36,20 @@ type Scherm =
   | { naam: 'proeftoets'; soort: Rondesoort; poging: number }
   | { naam: 'nabespreking'; soort: Rondesoort; gegevens: Gegeven[] }
 
-/** De twee onderwerpen waar tot nu toe het vaakst op misgegrepen is. */
+/**
+ * De twee onderwerpen uit hetzelfde hoofdstuk waar tot nu toe het vaakst op
+ * misgegrepen is. Een fout uit hoofdstuk 1 komt dus alleen terug als je weer
+ * met hoofdstuk 1 bezig bent, niet tussen de sommen van hoofdstuk 7.
+ */
 function herhalingVoor(code: string, voortgang: Voortgang): Onderwerp[] {
+  const hoofdstuk = ONDERWERPEN.find((o) => o.code === code)?.hoofdstuk
   return Object.entries(voortgang.foutenbak)
     .filter(([andere]) => andere !== code)
+    .map(([andere, aantal]) => [ONDERWERPEN.find((o) => o.code === andere), aantal] as const)
+    .filter((paar): paar is readonly [Onderwerp, number] => paar[0] !== undefined && paar[0].hoofdstuk === hoofdstuk)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 2)
-    .map(([andere]) => ONDERWERPEN.find((o) => o.code === andere))
-    .filter((o): o is Onderwerp => o !== undefined)
+    .map(([o]) => o)
     .filter((o) => isOpen(ONDERWERPEN, o.code, voortgang))
 }
 
