@@ -137,3 +137,13 @@ Alle 35 codes van de oefentool zitten erin. De letter-per-onderwerp verdeling is
 afgeleid uit de volgorde waarin de stof in de reader staat; klopt een code niet
 met wat er in Brightspace staat, dan is dat één regel verzetten — de codes zijn
 alleen labels boven de generators.
+
+---
+
+## Nummers op het scherm
+
+De speler ziet per hoofdstuk doorlopende nummers (hoofdstuk 2 = 2a t/m 2h), via
+`nummerVan()` in `src/stof/index.ts`. Intern blijft `code` de opgavecode van de
+oefentool (`1c`, `5a`, ...), want daaronder staan de sterren en de foutenbak in
+localStorage. Die codes hernoemen zou bestaande voortgang bij het verkeerde
+onderwerp zetten.

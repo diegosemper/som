@@ -139,3 +139,15 @@ export function hoofdstukken(): { nummer: number; naam: string; onderwerpen: Ond
   }
   return uit
 }
+
+/**
+ * Het nummer dat de speler ziet: hoofdstuk plus letter in padvolgorde, dus
+ * hoofdstuk 2 loopt 2a, 2b, 2c ... De `code` zelf blijft de opgavecode van de
+ * oefentool, want daaronder staat de voortgang (sterren, foutenbak) opgeslagen.
+ */
+export function nummerVan(code: string): string {
+  const o = zoekOnderwerp(code)
+  if (!o) return code
+  const zelfde = ONDERWERPEN.filter((x) => x.hoofdstuk === o.hoofdstuk)
+  return `${o.hoofdstuk}${'abcdefghijklmnop'[zelfde.indexOf(o)]}`
+}

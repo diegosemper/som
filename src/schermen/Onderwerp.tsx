@@ -1,4 +1,5 @@
 import type { Onderwerp as OnderwerpType, Rondesoort } from '../stof/types.ts'
+import { nummerVan } from '../stof/index.ts'
 import { sleutelVoor, type Voortgang } from '../opslag/voortgang.ts'
 import { RONDE_LENGTE } from '../engine/ronde.ts'
 import { gastVoor } from '../stof/gasten.ts'
@@ -31,7 +32,7 @@ export default function Onderwerp({ onderwerp, voortgang, opLes, opRonde, opTeru
           ← pad
         </button>
         <span className="rek" />
-        <span className="pil">{onderwerp.code}</span>
+        <span className="pil">{nummerVan(onderwerp.code)}</span>
       </div>
 
       <div className="onderwerpkop">

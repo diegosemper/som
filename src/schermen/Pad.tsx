@@ -1,6 +1,6 @@
 import type { Onderwerp, Rondesoort } from '../stof/types.ts'
 import { sterrenVoor, type Voortgang } from '../opslag/voortgang.ts'
-import { hoofdstukken, ONDERWERPEN } from '../stof/index.ts'
+import { hoofdstukken, nummerVan, ONDERWERPEN } from '../stof/index.ts'
 import { totaalSterren, volgendeStap } from '../engine/pad.ts'
 import { rangVoor } from '../ui/praat.ts'
 import Sterren from '../ui/Sterren.tsx'
@@ -45,7 +45,7 @@ export default function Pad({ voortgang, opKies, opProeftoets }: Props) {
               .join(' ')
             return (
               <button key={o.code} className={klassen} onClick={() => opKies(o)}>
-                <span className="code">{o.code}</span>
+                <span className="code">{nummerVan(o.code)}</span>
                 <span>
                   <div className="titel">{o.titel}</div>
                   <div className="onder">{o.waarover}</div>

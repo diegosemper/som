@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import type { Onderwerp, Opgave, Rondesoort } from '../stof/types.ts'
+import { nummerVan } from '../stof/index.ts'
 import { kijkNa } from '../engine/antwoord.ts'
 import { cijfer, maakToets, type Gegeven } from '../engine/toets.ts'
 import Toetsenbord from '../ui/Toetsenbord.tsx'
@@ -67,7 +68,7 @@ export default function Proeftoets({ onderwerpen, foutenbak, soort, opTerug, opK
 
       <div className="vraagvak">
         <div className="opdracht">
-          <span className="codetag">{opgave.code}</span> {opgave.opdracht}
+          <span className="codetag">{nummerVan(opgave.code)}</span> {opgave.opdracht}
         </div>
         <div
           className={
@@ -158,7 +159,7 @@ export function Nabespreking({
       {fout.map((g, i) => (
         <div className="uitlegkaart" key={i}>
           <h3>
-            <span className="codetag">{g.opgave.code}</span> {g.opgave.opdracht}
+            <span className="codetag">{nummerVan(g.opgave.code)}</span> {g.opgave.opdracht}
           </h3>
           <div className="voorbeeld">{g.opgave.vraag}</div>
           <p style={{ marginTop: 10 }}>

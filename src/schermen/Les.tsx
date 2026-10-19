@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import type { Onderwerp, Rondesoort } from '../stof/types.ts'
+import { nummerVan } from '../stof/index.ts'
 import { bouwLes, type Optie } from '../engine/les.ts'
 import { RONDE_LENGTE } from '../engine/ronde.ts'
 import { gastVoor } from '../stof/gasten.ts'
@@ -46,7 +47,7 @@ export default function Les({ onderwerp, opStart, opTerug }: Props) {
             <span key={i} className={i <= nummer ? 'stip aan' : 'stip'} />
           ))}
         </div>
-        <span className="pil">{onderwerp.code}</span>
+        <span className="pil">{nummerVan(onderwerp.code)}</span>
       </div>
 
       <div className="lesvak">
