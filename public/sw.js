@@ -6,7 +6,7 @@
  * want anders zie je na een nieuwe versie nog de oude app.
  */
 
-const CACHE = 'som-v2'
+const CACHE = 'som-v3'
 
 self.addEventListener('install', () => {
   self.skipWaiting()
@@ -32,7 +32,9 @@ self.addEventListener('fetch', (gebeurtenis) => {
     gebeurtenis.respondWith(
       (async () => {
         try {
-          const vers = await fetch(verzoek)
+          // no-store: anders levert de browsercache van GitHub Pages (10 minuten)
+          // nog de oude pagina, en daarmee de oude app.
+          const vers = await fetch(verzoek.url, { cache: 'no-store', credentials: 'same-origin' })
           const bak = await caches.open(CACHE)
           bak.put(verzoek, vers.clone())
           return vers
